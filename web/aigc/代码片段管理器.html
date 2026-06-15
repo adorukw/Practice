@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代码片段管理器</title>
+    <link href="https://cdn.jsdelivr.net/npm/@prismjs/themes@1.0.0/prism.css" rel="stylesheet">
+    <style>
+        .container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            height: 100vh;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        
+        .sidebar {
+            background: #2d2d2d;
+            color: #ccc;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .editor-area {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .editor-header {
+            padding: 15px;
+            background: #333;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .editor-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        .tag {
+            background: #555;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+        
+        .tag.active {
+            background: #4e73df;
+        }
+        
+        #code-editor {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 14px;
+            padding: 15px;
+            border: none;
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <input type="text" id="search" placeholder="搜索片段..." style="width: 100%; padding: 8px;">
+            <div class="tags" style="margin: 15px 0;">
+                <span class="tag active">全部</span>
+                <span class="tag">JavaScript</span>
+                <span class="tag">CSS</span>
+                <span class="tag">Python</span>
+                <button style="float: right;">+</button>
+            </div>
+            <ul id="snippet-list" style="list-style: none; padding: 0;">
+                <li style="padding: 10px; border-bottom: 1px solid #444; cursor: pointer;">
+                    <div>数组去重</div>
+                    <div style="font-size: 0.8rem; color: #888;">JavaScript</div>
+                </li>
+                <li style="padding: 10px; border-bottom: 1px solid #444; cursor: pointer;">
+                    <div>CSS居中</div>
+                    <div style="font-size: 0.8rem; color: #888;">CSS</div>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="editor-area">
+            <div class="editor-header">
+                <div>
+                    <select id="language">
+                        <option>JavaScript</option>
+                        <option>HTML</option>
+                        <option>CSS</option>
+                        <option>Python</option>
+                    </select>
+                    <input type="text" placeholder="片段标题" style="padding: 5px;">
+                </div>
+                <div>
+                    <button>保存</button>
+                    <button>新建</button>
+                </div>
+            </div>
+            <div class="editor-container">
+                <textarea id="code-editor">// 数组去重示例
+function uniqueArray(arr) {
+  return [...new Set(arr)];
+}</textarea>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.0.0/prism.min.js"></script>
+    <script>
+        // 代码片段管理器核心功能
+        class SnippetManager {
+            constructor() {
+                this.snippets = [];
+                this.tags = [];
+                this.currentSnippet = null;
+                this.init();
+            }
+            
+            init() {
+                this.loadData();
+                this.setupEditor();
+                this.setupEventListeners();
+            }
+            
+            loadData() {
+                // 从IndexedDB加载片段和标签
+            }
+            
+            saveData() {
+                // 保存到IndexedDB
+            }
+            
+            addSnippet(title, code, language, tags) {
+                // 添加新片段
+            }
+            
+            searchSnippets(query, tags) {
+                // 搜索片段
+            }
+            
+            setupEditor() {
+                // 初始化代码编辑器
+                const editor = document.getElementById('code-editor');
+                editor.addEventListener('input', function() {
+                    // 语法高亮逻辑
+                });
+            }
+            
+            highlightCode() {
+                // 使用Prism高亮代码
+                Prism.highlightAll();
+            }
+            
+            setupEventListeners() {
+                // 事件监听
+            }
+        }
+        
+        const manager = new SnippetManager();
+    </script>
+</body>
+</html>

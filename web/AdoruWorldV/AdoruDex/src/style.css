@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'PokemonGB';
+  src: url('https://cdn.jsdelivr.net/npm/pokemon-font@1.0.0/pokemon-font.woff') format('woff');
+  font-display: swap;
+}
+
+@theme {
+  --color-dex-bg: #F8E0B0;
+  --color-dex-window: #F0D090;
+  --color-dex-dark: #C84030;
+  --color-dex-darker: #801810;
+  --color-dex-light: #FFF0D0;
+  --color-dex-lighter: #FFF8E8;
+  --color-dex-amber: #F8C830;
+  --color-dex-amber-dark: #C89818;
+  --color-dex-red: #E04840;
+  --color-dex-red-dark: #B02820;
+  --color-dex-blue: #48A0E0;
+  --color-dex-blue-dark: #2870B0;
+  --color-dex-green: #48A838;
+  --color-dex-green-dark: #287820;
+  --color-dex-purple: #9058C8;
+  --color-dex-purple-dark: #6838A0;
+  --color-dex-gray: #9098A0;
+  --color-dex-gray-dark: #687078;
+  --color-dex-brown: #A87848;
+  --font-pokemon: 'PokemonGB', monospace;
+  --font-pixel: 'Courier New', 'Noto Sans SC', monospace;
+}
+
+body {
+  background-color: #D0A858;
+  background-image:
+    linear-gradient(45deg, #C89840 25%, transparent 25%),
+    linear-gradient(-45deg, #C89840 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #C89840 75%),
+    linear-gradient(-45deg, transparent 75%, #C89840 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+  image-rendering: pixelated;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+}
+
+.pixel-text {
+  text-shadow:
+    1px 0 0 currentColor,
+    2px 0 0 rgba(0,0,0,0.08);
+  letter-spacing: 1px;
+}
+
+.pixel-shadow {
+  box-shadow:
+    3px 0 0 0 rgba(128, 24, 16, 0.6),
+    0 3px 0 0 rgba(128, 24, 16, 0.6),
+    2px 2px 0 0 rgba(128, 24, 16, 0.6),
+    4px 4px 0 0 rgba(0, 0, 0, 0.2);
+}
+
+.pixel-shadow-sm {
+  box-shadow:
+    2px 0 0 0 rgba(128, 24, 16, 0.5),
+    0 2px 0 0 rgba(128, 24, 16, 0.5),
+    1px 1px 0 0 rgba(128, 24, 16, 0.5),
+    3px 3px 0 0 rgba(0, 0, 0, 0.15);
+}
+
+.pixel-border {
+  border-image: repeating-linear-gradient(
+    0deg,
+    #801810, #801810 4px,
+    #C84030 4px, #C84030 8px
+  ) 4;
+  border-style: solid;
+  border-width: 4px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes slide-in {
+  from { transform: translateY(-4px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes scanline {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 4px; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 2px 0 rgba(248, 200, 48, 0.4); }
+  50% { box-shadow: 0 0 6px 2px rgba(248, 200, 48, 0.6); }
+}
+
+.animate-blink {
+  animation: blink 0.8s step-end infinite;
+}
+
+.animate-slide-in {
+  animation: slide-in 0.15s ease-out;
+}
+
+.animate-typewriter {
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typewriter 1.5s steps(20) forwards;
+}
+
+.animate-scanline {
+  animation: scanline 0.3s linear infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 1.5s ease-in-out infinite;
+}

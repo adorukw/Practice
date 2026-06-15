@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Post {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  title       String
+  description String   @default("")
+  content     String   @default("")
+  coverImage  String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  published   Boolean  @default(false)
+  wordCount   Int      @default(0) @map("word_count")
+  views       Int      @default(0)
+  featured    Boolean  @default(false)
+  categories  PostCategory[]
+  tags        PostTag[]
+
+  @@map("posts")
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  icon        String?
+  color       String?
+  posts       PostCategory[]
+  dexEntries  DexEntry[]
+
+  @@map("categories")
+}
+
+model Tag {
+  id    String @id @default(uuid())
+  name  String @unique
+  slug  String @unique
+  color String?
+  posts PostTag[]
+
+  @@map("tags")
+}
+
+model PostCategory {
+  postId     String   @map("post_id")
+  categoryId String   @map("category_id")
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([postId, categoryId])
+  @@map("post_categories")
+}
+
+model PostTag {
+  postId String @map("post_id")
+  tagId  String @map("tag_id")
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+  @@map("post_tags")
+}
+
+model Project {
+  id          String @id @default(uuid())
+  name        String
+  description String @default("")
+  tech        String @default("[]")
+  link        String?
+  github      String?
+  image       String?
+  status      String @default("in-progress")
+
+  @@map("projects")
+}
+
+model DexEntry {
+  id            String   @id @default(uuid())
+  slug          String   @unique
+  title         String
+  originalTitle String?  @map("original_title")
+  cover         String
+  category      String
+  status        String
+  rating        Int      @default(0)
+  progress      Int      @default(0)
+  total         Int      @default(1)
+  startDate     String?  @map("start_date")
+  finishDate    String?  @map("finish_date")
+  tags          String   @default("[]")
+  comment       String?
+  creator       String?
+  year          Int?
+  platform      String?
+  genre         String   @default("[]")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  categoryId    String?  @map("category_id")
+  categoryRef   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@map("dex_entries")
+}
+
+model SiteConfig {
+  id    String @id @default("site")
+  key   String @unique
+  value String @default("{}")
+
+  @@map("site_configs")
+}

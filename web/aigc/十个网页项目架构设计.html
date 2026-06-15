@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>网页项目架构设计集</title>
+  <style>
+    .project { margin-bottom: 40px; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; }
+    h2 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+    h3 { color: #3498db; }
+    ul { padding-left: 20px; }
+    li { margin-bottom: 8px; }
+    .mermaid-container { background: #f9f9f9; padding: 15px; border-radius: 5px; }
+    .architecture { font-family: monospace; white-space: pre; background: #272822; color: #f8f8f2; padding: 15px; overflow: auto; }
+  </style>
+</head>
+<body>
+  <h1>十个简单网页项目架构设计</h1>
+  
+  <!-- 项目1：个人任务管理器 -->
+  <div class="project">
+    <h2>1. 个人任务管理器</h2>
+    <div class="mermaid-container">
+      <div class="architecture">graph TD
+    A[用户界面] --> B[任务管理]
+    A --> C[提醒设置]
+    B --> D[任务创建]
+    B --> E[任务分类]
+    B --> F[进度追踪]
+    C --> G[通知系统]
+    C --> H[提醒方式]
+    A --> I[数据统计]
+    I --> J[完成率图表]
+    I --> K[耗时分析]</div>
+    </div>
+    <h3>核心功能模块：</h3>
+    <ul>
+      <li>任务创建与编辑系统</li>
+      <li>优先级标记功能</li>
+      <li>到期提醒通知</li>
+      <li>分类过滤机制</li>
+      <li>数据统计图表</li>
+    </ul>
+  </div>
+  
+  <!-- 项目2：简易食谱助手 -->
+  <div class="project">
+    <h2>2. 简易食谱助手</h2>
+    <div class="mermaid-container">
+      <div class="architecture">graph TD
+    A[界面组件] --> B[食谱库]
+    A --> C[食材管理]
+    B --> D[食谱搜索]
+    B --> E[分类展示]
+    C --> F[食材库存]
+    C --> G[购物清单]
+    A --> H[食谱创建器]
+    H --> I[步骤编辑]
+    H --> J[营养计算]</div>
+    </div>
+    <h3>核心功能模块：</h3>
+    <ul>
+      <li>食谱分类浏览系统</li>
+      <li>食材库存追踪</li>
+      <li>智能购物清单生成</li>
+      <li>食谱创建向导</li>
+      <li>烹饪步骤计时器</li>
+    </ul>
+  </div>
+  
+  <!-- 项目3：家庭账单追踪器 -->
+  <div class="project">
+    <h2>3. 家庭账单追踪器</h2>
+    <div class="mermaid-container">
+      <div class="architecture">graph TD
+    A[用户面板] --> B[收支管理]
+    A --> C[预算系统]
+    B --> D[交易记录]
+    B --> E[类别标记]
+    C --> F[预算设置]
+    C --> G[预警机制]
+    A --> H[统计报表]
+    H --> I[趋势图]
+    H --> J[收支对比]</div>
+    </div>
+    <h3>核心功能模块：</h3>
+    <ul>
+      <li>交易记录CRUD系统</li>
+      <li>动态预算设置</li>
+      <li>费用类别管理</li>
+      <li>预算超支预警</li>
+      <li>月度统计对比图表</li>
+    </ul>
+  </div>
+  
+  <!-- 项目4：天气信息展示 -->
+  <div class="project">
+    <h2>4. 天气信息展示</h2>
+    <div class="mermaid-container">
+      <div class="architecture">graph TD
+    A[界面组件] --> B[位置管理]
+    A --> C[天气数据]
+    B --> D[位置搜索]
+    B --> E[位置收藏]
+    C --> F[当前天气]
+    C --> G[天气预报]
+    A --> H[信息展示]
+    H --> I[可视化图表]
+    H --> J[警报通知]</div>
+    </div>
+    <h3>核心功能模块：</h3>
+    <ul>
+      <li>位置搜索与收藏系统</li>
+      <li>实时天气获取模块</li>
+      <li>多日预报展示组件</li>
+      <li>气象数据可视化</li>
+      <li>天气异常警报通知</li>
+    </ul>
+  </div>
+  
+  <!-- 项目5：学习进度追踪 -->
+  <div class="project">
+    <h2>5. 学习进度追踪</h2>
+    <div class="mermaid-container">
+      <div class="architecture">graph TD
+    A[学习面板] --> B[课程管理]
+    A --> C[进度跟踪]
+    B --> D[科目创建]
+    B --> E[资源添加]
+    C --> F[计时系统]
+    C --> G[目标设定]
+    A --> H[成就系统]
+    H --> I[徽章奖励]
+    H --> J[统计报表]</div>
+    </div>
+    <h3>核心功能模块：</h3>
+    <ul>
+      <li>学习科目管理</li>
+      <li>专注时间计时器</li>
+      <li>学习目标设定</li>
+      <li>进度追踪图表</li>
+      <li>成就徽章系统</li>
+    </ul>
+  </div>
+  
+  <!-- 项目6：书籍收藏管理 -->
+  <div class="project">
+    <h2>6. 书籍收藏管理</h2>
+    <div class="mermaid-container">
+      <div class="architecture">graph TD
+    A[书籍管理] --> B[收藏库]
+    A --> C[阅读追踪]
+    B --> D[书籍添加]
+    B --> E[分类标签]
+    C --> F[阅读进度]
+    C --> G[笔记系统]
+    A --> H[搜索发现]
+    H --> I[推荐算法]
+    H --> J[API集成]</div>
+    </div>
+    <h3>核心功能模块：</h3>
+    <ul>
+      <li>图书信息录入系统</li>
+      <li>个性化标签分类</li>
+      <li>阅读进度跟踪</li>
+      <li>阅读笔记管理</li>
+      <li>基于兴趣的推荐</li>
+    </ul>
+  </div>
+  
+  <!-- 项目7：健身记录助手 -->
+  <div class="project">
+    <h2>7. 健身记录助手</h2>
+    <div class="mermaid-container">
+      <div class="architecture">graph TD
+    A[健身面板] --> B[计划管理]
+    A --> C[记录跟踪]
+    B --> D[训练模板]
+    B --> E[周期计划]
+    C --> F[历史数据]
+    C --> G[统计图表]
+    A --> H[成就系统]
+    H --> I[里程碑]
+    H --> J[进步对比]</div>
+    </div>
+    <h3>核心功能模块：</h3>
+    <ul>
+      <li>训练计划创建</li>
+      <li>锻炼日志记录</li>
+      <li>进度数据可视化</li>
+      <li>成就里程碑系统</li>
+      <li>运动数据对比</li>
+    </ul>
+  </div>
+  
+  <!-- 项目8：电影推荐系统 -->
+  <div class="project">
+    <h2>8. 电影推荐系统</h2>
+    <div class="mermaid-container">
+      <div class="architecture">graph TD
+    A[推荐界面] --> B[影片数据库]
+    A --> C[用户偏好]
+    B --> D[分类过滤]
+    B --> E[详情展示]
+    C --> F[偏好设置]
+    C --> G[评分系统]
+    A --> H[推荐引擎]
+    H --> I[协同过滤]
+    H --> J[相似推荐]</div>
+    </div>
+    <h3>核心功能模块：</h3>
+    <ul>
+      <li>电影信息数据库</li>
+      <li>用户评分系统</li>
+      <li>分类筛选浏览</li>
+      <li>偏好学习算法</li>
+      <li>相似影片推荐</li>
+    </ul>
+  </div>
+  
+  <!-- 项目9：灵感收集板 -->
+  <div class="project">
+    <h2>9. 灵感收集板</h2>
+    <div class="mermaid-container">
+      <div class="architecture">graph TD
+    A[收集面板] --> B[笔记系统]
+    A --> C[媒体库]
+    B --> D[富文本编辑]
+    B --> E[标签管理]
+    C --> F[图片上传]
+    C --> G[链接嵌入]
+    A --> H[整理工具]
+    H --> I[画板整理]
+    H --> J[智能分组]</div>
+    </div>
+    <h3>核心功能模块：</h3>
+    <ul>
+      <li>富文本笔记编辑器</li>
+      <li>多媒体支持（图片/链接）</li>
+      <li>可视化画板管理</li>
+      <li>智能标签系统</li>
+      <li>灵感卡片组织工具</li>
+    </ul>
+  </div>
+  
+  <!-- 项目10：旅行规划器 -->
+  <div class="project">
+    <h2>10. 旅行规划器</h2>
+    <div class="mermaid-container">
+      <div class="architecture">graph TD
+    A[规划界面] --> B[行程管理]
+    A --> C[地点发现]
+    B --> D[行程创建]
+    B --> E[行程分享]
+    C --> F[地点搜索]
+    C --> G[收藏系统]
+    A --> H[预算系统]
+    H --> I[费用记录]
+    H --> J[预算警报]</div>
+    </div>
+    <h3>核心功能模块：</h3>
+    <ul>
+      <li>目的地地点搜索</li>
+      <li>行程路线规划</li>
+      <li>景点收藏系统</li>
+      <li>旅行费用追踪</li>
+      <li>行程分享功能</li>
+    </ul>
+  </div>
+</body>
+</html>

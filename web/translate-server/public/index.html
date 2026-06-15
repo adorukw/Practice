@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英语单词翻译工具</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-export {
+            background-color: #27ae60;
+        }
+
+        .btn-export:hover {
+            background-color: #219653;
+        }
+
+        .results-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .results-box {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 4px;
+            padding: 15px;
+            min-height: 200px;
+        }
+
+        .results-box h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .result-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .suggestion {
+            color: #e74c3c;
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+
+        .suggestion-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .suggestion-word {
+            background: #f1f1f1;
+            padding: 2px 6px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .suggestion-word:hover {
+            background: #e0e0e0;
+        }
+
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>英语单词翻译工具</h1>
+
+    <div class="container">
+        <div class="input-group">
+            <label for="inputWords">输入单词（每行一个单词）:</label>
+            <textarea id="inputWords" placeholder="输入要翻译的单词，每行一个..."></textarea>
+        </div>
+
+        <button id="translateBtn" class="btn">翻译单词</button>
+
+        <div id="status" class="status"></div>
+    </div>
+
+    <div class="container">
+        <div class="results-container">
+            <div class="results-box">
+                <h3>翻译结果</h3>
+                <div id="translatedResults"></div>
+            </div>
+
+            <div class="results-box">
+                <h3>未找到的单词</h3>
+                <div id="missedResults"></div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button id="exportBtn" class="btn btn-export">导出CSV文件</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const BASE_URL=''
+            const inputWords = document.getElementById('inputWords');
+            const translateBtn = document.getElementById('translateBtn');
+            const exportBtn = document.getElementById('exportBtn');
+            const translatedResults = document.getElementById('translatedResults');
+            const missedResults = document.getElementById('missedResults');
+            const statusDiv = document.getElementById('status');
+
+            let translationData = {
+                translated: [],
+                missed: []
+            };
+
+            // 翻译按钮事件
+            translateBtn.addEventListener('click', async () => {
+                const words = inputWords.value.trim();
+                if (!words) {
+                    showStatus('请输入要翻译的单词', 'error');
+                    return;
+                }
+
+                try {
+                    showStatus('正在翻译...', 'success');
+
+                    const response = await fetch(BASE_URL+'/translate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ words })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('翻译请求失败');
+                    }
+
+                    const data = await response.json();
+                    translationData = data;
+
+                    // 显示翻译结果
+                    translatedResults.innerHTML = '';
+                    if (data.translated.length > 0) {
+                        data.translated.forEach(item => {
+                            const div = document.createElement('div');
+                            div.className = 'result-item';
+                            div.innerHTML = `<strong>${item.word}</strong>: ${item.translation}`;
+                            translatedResults.appendChild(div);
+                        });
+                    } else {
+                        translatedResults.innerHTML = '<div class="result-item">无翻译结果</div>';
+                    }
+
+                    // 显示未找到的单词
+                    missedResults.innerHTML = '';
+                    if (data.missed.length > 0) {
+                        data.missed.forEach(item => {
+                            const div = document.createElement('div');
+                            div.className = 'result-item';
+                            div.innerHTML = `<strong>${item.word}</strong>`;
+
+                            if (item.suggestions && item.suggestions.length > 0) {
+                                const suggestionDiv = document.createElement('div');
+                                suggestionDiv.className = 'suggestion';
+                                suggestionDiv.innerHTML = '可能为正确拼写的单词:';
+
+                                const suggestionList = document.createElement('div');
+                                suggestionList.className = 'suggestion-list';
+
+                                item.suggestions.forEach(suggestion => {
+                                    const span = document.createElement('span');
+                                    span.className = 'suggestion-word';
+                                    span.textContent = suggestion;
+                                    span.onclick = () => {
+                                        inputWords.value += `${suggestion}\n`;
+                                        showStatus(`已添加建议单词: ${suggestion}`, 'success');
+                                    };
+                                    suggestionList.appendChild(span);
+                                });
+
+                                div.appendChild(suggestionDiv);
+                                div.appendChild(suggestionList);
+                            } else {
+                                const noSuggestion = document.createElement('div');
+                                noSuggestion.className = 'suggestion';
+                                noSuggestion.textContent = '未找到相似单词';
+                                div.appendChild(noSuggestion);
+                            }
+
+                            missedResults.appendChild(div);
+                        });
+                    } else {
+                        missedResults.innerHTML = '<div class="result-item">所有单词都已找到</div>';
+                    }
+
+                    showStatus(`翻译完成: 成功翻译 ${data.translated.length} 个单词, ${data.missed.length} 个未找到`, 'success');
+                } catch (error) {
+                    console.error('翻译错误:', error);
+                    showStatus(`翻译错误: ${error.message}`, 'error');
+                }
+            });
+
+            // 导出按钮事件
+            // 替换原来的导出按钮事件处理
+            exportBtn.addEventListener('click', async () => {
+                if (translationData.translated.length === 0 && translationData.missed.length === 0) {
+                    showStatus('没有可导出的数据', 'error');
+                    return;
+                }
+
+                try {
+                    showStatus('正在生成导出文件...', 'success');
+
+                    const response = await fetch(BASE_URL+'/export', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(translationData)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('导出请求失败');
+                    }
+
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'translations.csv';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+
+                    showStatus('CSV文件已下载', 'success');
+                } catch (error) {
+                    console.error('导出错误:', error);
+                    showStatus(`导出错误: ${error.message}`, 'error');
+                }
+            });
+
+            // 显示状态信息
+            function showStatus(message, type) {
+                statusDiv.textContent = message;
+                statusDiv.className = `status ${type}`;
+                statusDiv.style.display = 'block';
+
+                // 3秒后隐藏
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+
+</html>

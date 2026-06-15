@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单词学习应用</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #f72585;
+            --success: #06d6a0;
+            --warning: #ffd166;
+            --danger: #ef476f;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border-radius: 0.5rem;
+            --transition: all 0.3s ease;
+            
+            /* 响应式单位 */
+            --base-size: 1rem;
+            --padding-sm: 0.5rem;
+            --padding-md: 0.75rem;
+            --padding-lg: 1rem;
+            --margin-sm: 0.25rem;
+            --margin-md: 0.5rem;
+            --margin-lg: 0.75rem;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: var(--dark);
+            display: flex;
+            flex-direction: column;
+            padding: var(--padding-sm);
+            font-size: var(--base-size);
+        }
+        
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        /* 紧凑型标题 */
+        .compact-header {
+            text-align: center;
+            padding: var(--padding-sm);
+            margin-bottom: var(--margin-sm);
+        }
+        
+        .compact-header h1 {
+            font-size: 1.25rem;
+            color: var(--primary);
+            margin-bottom: var(--margin-sm);
+        }
+        
+        .compact-header p {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        /* 标签页 */
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin-bottom: var(--margin-sm);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: var(--padding-sm);
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        
+        .tab.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        /* 主内容区域 */
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .tab-content {
+            display: none;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 学习模式选择 */
+        .mode-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--margin-sm);
+            margin-bottom: var(--margin-sm);
+        }
+        
+        .mode-btn {
+            padding: var(--padding-sm);
+            text-align: center;
+            background-color: white;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .mode-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .mode-btn i {
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        /* 练习区域 - 优化布局 */
+        #practice-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: var(--padding-md);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            min-height: 0; /* 重要：防止溢出 */
+            position: relative;
+        }
+        
+        .word-display {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: var(--margin-md);
+            padding: var(--padding-sm);
+        }
+        
+        .instruction {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: var(--margin-md);
+        }
+        
+        .choices {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--margin-sm);
+            margin-bottom: var(--margin-md);
+        }
+        
+        .choice-btn {
+            padding: var(--padding-md);
+            background: white;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            text-align: left;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .choice-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .choice-btn.correct {
+            background-color: rgba(6, 214, 160, 0.1);
+            border-color: var(--success);
+            color: #036b52;
+        }
+        
+        .choice-btn.incorrect {
+            background-color: rgba(239, 71, 111, 0.1);
+            border-color: var(--danger);
+            color: #a12a47;
+        }
+        
+        /* 优化后的选择结果区域 */
+        .choice-result {
+            text-align: center;
+            padding: var(--padding-sm);
+            margin-bottom: var(--margin-md);
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            min-height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: var(--margin-sm);
+        }
+        
+        .result-correct {
+            background-color: rgba(6, 214, 160, 0.1);
+            color: #036b52;
+            border: 1px solid var(--success);
+        }
+        
+        .result-incorrect {
+            background-color: rgba(239, 71, 111, 0.1);
+            color: #a12a47;
+            border: 1px solid var(--danger);
+        }
+        
+        .result-translation {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        /* 统计和操作区域 */
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--margin-md);
+            padding: var(--padding-sm);
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+        }
+        
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--gray);
+        }
+        
+        .controls {
+            display: flex;
+            gap: var(--margin-sm);
+        }
+        
+        .controls button {
+            flex: 1;
+            padding: var(--padding-sm);
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+        
+        .btn-next {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-next:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-familiar {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-familiar:hover {
+            background-color: #05b58a;
+        }
+        
+        /* 单词本管理区域 */
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: var(--padding-md);
+            margin-bottom: var(--margin-md);
+        }
+        
+        .card-title {
+            font-size: 1rem;
+            color: var(--primary);
+            margin-bottom: var(--margin-md);
+            padding-bottom: var(--padding-sm);
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-title i {
+            margin-right: var(--margin-sm);
+        }
+        
+        .form-group {
+            display: flex;
+            gap: var(--margin-sm);
+            margin-bottom: var(--margin-md);
+            flex-wrap: wrap;
+        }
+        
+        input, select, button {
+            padding: var(--padding-sm);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--light-gray);
+            font-size: 0.9rem;
+            min-height: 2.5rem;
+        }
+        
+        input, select {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--margin-sm);
+            white-space: nowrap;
+            border: none;
+        }
+        
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        button.success {
+            background-color: var(--success);
+        }
+        
+        button.danger {
+            background-color: var(--danger);
+        }
+        
+        button.warning {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+        
+        button.secondary {
+            background-color: var(--secondary);
+        }
+        
+        .book-actions {
+            display: flex;
+            gap: var(--margin-sm);
+            margin-top: var(--margin-md);
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+        
+        /* 响应式调整 */
+        @media (min-height: 600px) {
+            .compact-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .word-display {
+                font-size: 1.75rem;
+            }
+        }
+        
+        @media (min-height: 700px) {
+            :root {
+                --padding-sm: 0.75rem;
+                --padding-md: 1rem;
+                --margin-sm: 0.5rem;
+                --margin-md: 0.75rem;
+            }
+            
+            .word-display {
+                font-size: 2rem;
+            }
+            
+            .choices {
+                gap: var(--margin-md);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .form-group {
+                flex-direction: column;
+            }
+            
+            .book-actions {
+                flex-direction: column;
+            }
+            
+            .book-actions button {
+                width: 100%;
+            }
+            
+            .mode-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: var(--padding-md);
+            border-radius: var(--border-radius);
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            max-width: 300px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background-color: var(--success);
+        }
+        
+        .notification.error {
+            background-color: var(--danger);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: var(--margin-sm);
+            width: 100%;
+            margin: var(--margin-md) 0;
+        }
+        
+        .input-group input {
+            flex: 1;
+        }
+        
+        .translation-display {
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin-top: var(--margin-md);
+            padding: var(--padding-sm);
+            background: white;
+            border-radius: var(--border-radius);
+            width: 100%;
+            text-align: center;
+        }
+        
+        /* 新增：紧凑型结果展示 */
+        .compact-feedback {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--margin-sm);
+            margin-bottom: var(--margin-md);
+            padding: var(--padding-sm);
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            min-height: 2.5rem;
+        }
+        
+        .feedback-icon {
+            font-size: 1.2rem;
+        }
+        
+        .feedback-correct {
+            background-color: rgba(6, 214, 160, 0.1);
+            color: #036b52;
+            border: 1px solid var(--success);
+        }
+        
+        .feedback-incorrect {
+            background-color: rgba(239, 71, 111, 0.1);
+            color: #a12a47;
+            border: 1px solid var(--danger);
+        }
+    </style>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="tabs">
+            <div class="tab active" data-tab="manage">单词本管理</div>
+            <div class="tab" data-tab="practice">学习单词</div>
+        </div>
+
+        <!-- 管理界面 -->
+        <div id="manage-tab" class="tab-content active">
+            <!-- 单词本管理 -->
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="material-symbols-outlined">menu_book</span>
+                    单词本管理
+                </h2>
+                <div class="form-group">
+                    <input type="text" id="new-book-name" placeholder="新单词本名称">
+                    <button id="create-book" class="success">
+                        <span class="material-symbols-outlined">add</span>创建单词本
+                    </button>
+                </div>
+                <div id="books-container">
+                    <div class="form-group">
+                        <select id="book-list"></select>
+                        <button id="delete-book" class="danger">
+                            <span class="material-symbols-outlined">delete</span>删除单词本
+                        </button>
+                    </div>
+                    <div class="book-actions">
+                        <button id="export-csv" class="warning">
+                            <span class="material-symbols-outlined">download</span>导出CSV
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 添加单词 -->
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="material-symbols-outlined">add_circle</span>
+                    添加单词
+                </h2>
+                <div class="form-group">
+                    <input type="text" id="new-word" placeholder="英文单词">
+                    <input type="text" id="new-translation" placeholder="中文翻译">
+                    <button id="add-single" class="secondary">
+                        <span class="material-symbols-outlined">add</span>添加单词
+                    </button>
+                </div>
+                <div class="form-group">
+                    <input type="file" id="csv-file" accept=".csv" style="padding: 12px; flex: 1;">
+                    <button id="import-csv" class="warning">
+                        <span class="material-symbols-outlined">upload</span>导入CSV
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 学习界面 -->
+        <div id="practice-tab" class="tab-content">
+            <!-- 练习区域 -->
+            <div class="card" style="flex: 1; display: flex; flex-direction: column;">
+                <h2 class="card-title">
+                    <span class="material-symbols-outlined">school</span>
+                    学习模式
+                </h2>
+                <div class="mode-selector">
+                    <div class="mode-btn" data-mode="choice">
+                        <span class="material-symbols-outlined">format_list_bulleted</span>
+                        四选一练习
+                    </div>
+                    <div class="mode-btn" data-mode="recall">
+                        <span class="material-symbols-outlined">bolt</span>
+                        快速回忆
+                    </div>
+                    <div class="mode-btn" data-mode="listen">
+                        <span class="material-symbols-outlined">hearing</span>
+                        听写练习
+                    </div>
+                </div>
+
+                <div id="practice-area">
+                    <p>请从上方选择一种学习模式开始练习</p>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="total-words">0</div>
+                        <div class="stat-label">总单词数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="familiar-words">0</div>
+                        <div class="stat-label">已掌握</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="remaining-words">0</div>
+                        <div class="stat-label">待学习</div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button id="next-word" class="btn-next">
+                        <span class="material-symbols-outlined">skip_next</span>下一个
+                    </button>
+                    <button id="mark-familiar" class="btn-familiar">
+                        <span class="material-symbols-outlined">check_circle</span>标记为"熟"
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // 全局变量
+        const BASE_URL="";
+        let currentBook = null;
+        let currentMode = null;
+        let words = [];
+        let currentWord = null;
+        let practiceOrder = [];
+        let selectedOption = null;
+        let isChoiceMade = false;
+
+        // DOM元素
+        const bookListEl = document.getElementById('book-list');
+        const newBookNameEl = document.getElementById('new-book-name');
+        const createBookBtn = document.getElementById('create-book');
+        const deleteBookBtn = document.getElementById('delete-book');
+        const exportCsvBtn = document.getElementById('export-csv');
+        const newWordEl = document.getElementById('new-word');
+        const newTranslationEl = document.getElementById('new-translation');
+        const addSingleBtn = document.getElementById('add-single');
+        const csvFileEl = document.getElementById('csv-file');
+        const importCsvBtn = document.getElementById('import-csv');
+        const modeButtons = document.querySelectorAll('.mode-btn');
+        const practiceArea = document.getElementById('practice-area');
+        const nextWordBtn = document.getElementById('next-word');
+        const markFamiliarBtn = document.getElementById('mark-familiar');
+        const totalWordsEl = document.getElementById('total-words');
+        const familiarWordsEl = document.getElementById('familiar-words');
+        const remainingWordsEl = document.getElementById('remaining-words');
+        const notificationEl = document.getElementById('notification');
+        const tabButtons = document.querySelectorAll('.tab');
+        const manageTab = document.getElementById('manage-tab');
+        const practiceTab = document.getElementById('practice-tab');
+
+        // 初始化应用
+        async function init() {
+            // 加载单词本列表
+            await loadBookList();
+            // 绑定事件
+            setupEventListeners();
+            // 更新统计数据
+            updateStats();
+        }
+
+        // 事件监听器设置
+        function setupEventListeners() {
+            createBookBtn.addEventListener('click', createNewBook);
+            deleteBookBtn.addEventListener('click', deleteCurrentBook);
+            exportCsvBtn.addEventListener('click', exportCsv);
+            bookListEl.addEventListener('change', bookSelected);
+            addSingleBtn.addEventListener('click', addSingleWord);
+            importCsvBtn.addEventListener('click', importCsv);
+
+            modeButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // 移除所有活动状态
+                    modeButtons.forEach(b => b.classList.remove('active'));
+                    // 设置当前活动状态
+                    btn.classList.add('active');
+
+                    const mode = btn.dataset.mode;
+                    startPracticeMode(mode);
+                });
+            });
+
+            nextWordBtn.addEventListener('click', showNextWord);
+            markFamiliarBtn.addEventListener('click', markWordAsFamiliar);
+
+            // 标签页切换
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // 移除所有活动状态
+                    tabButtons.forEach(b => b.classList.remove('active'));
+                    // 设置当前活动状态
+                    btn.classList.add('active');
+
+                    const tab = btn.dataset.tab;
+                    manageTab.classList.toggle('active', tab === 'manage');
+                    practiceTab.classList.toggle('active', tab === 'practice');
+
+                    // 切换到学习标签页时加载单词
+                    if (tab === 'practice' && currentBook) {
+                        loadWordsForBook();
+                    }
+                });
+            });
+        }
+
+        // 显示通知
+        function showNotification(message, isSuccess = true) {
+            notificationEl.textContent = message;
+            notificationEl.className = 'notification';
+            notificationEl.classList.add(isSuccess ? 'success' : 'error', 'show');
+
+            setTimeout(() => {
+                notificationEl.classList.remove('show');
+            }, 3000);
+        }
+
+        // 加载单词本列表
+        async function loadBookList() {
+            try {
+                const response = await fetch(BASE_URL+'/books');
+                const books = await response.json();
+
+                bookListEl.innerHTML = '';
+                books.forEach(book => {
+                    const option = document.createElement('option');
+                    option.value = book.id;
+                    option.textContent = book.name;
+                    bookListEl.appendChild(option);
+                });
+
+                if (books.length > 0) {
+                    currentBook = books[0].id;
+                    bookListEl.value = currentBook;
+                    await loadWordsForBook();
+                }
+            } catch (error) {
+                console.error('加载单词本失败:', error);
+                showNotification('加载单词本失败', false);
+            }
+        }
+
+        // 创建新单词本
+        async function createNewBook() {
+            const name = newBookNameEl.value.trim();
+            if (!name) {
+                showNotification('单词本名称不能为空', false);
+                return;
+            }
+
+            try {
+                const response = await fetch(BASE_URL+'/books', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name })
+                });
+
+                if (response.ok) {
+                    await loadBookList();
+                    newBookNameEl.value = '';
+                    showNotification(`单词本"${name}"创建成功`);
+                }
+            } catch (error) {
+                console.error('创建单词本失败:', error);
+                showNotification('创建单词本失败', false);
+            }
+        }
+
+        // 删除单词本
+        async function deleteCurrentBook() {
+            if (!currentBook) {
+                showNotification('请先选择要删除的单词本', false);
+                return;
+            }
+
+            const bookName = bookListEl.options[bookListEl.selectedIndex].text;
+
+            if (!confirm(`确定要删除单词本"${bookName}"吗？此操作不可恢复！`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(BASE_URL+`/books/${currentBook}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    await loadBookList();
+                    showNotification(`单词本"${bookName}"已删除`);
+                }
+            } catch (error) {
+                console.error('删除单词本失败:', error);
+                showNotification('删除单词本失败', false);
+            }
+        }
+
+        // 导出CSV
+        async function exportCsv() {
+            if (!currentBook) {
+                showNotification('请先选择要导出的单词本', false);
+                return;
+            }
+
+            try {
+                // 获取当前单词本名称
+                const bookName = bookListEl.options[bookListEl.selectedIndex].text;
+
+                // 发起导出请求
+                const response = await fetch(BASE_URL+`/books/${currentBook}/export`);
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || '导出失败');
+                }
+
+                // 创建下载链接
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${bookName}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                showNotification(`"${bookName}"导出成功`);
+            } catch (error) {
+                console.error('导出CSV失败:', error);
+                showNotification(`导出失败: ${error.message}`, false);
+            }
+        }
+
+        // 单词本选择变更
+        async function bookSelected(event) {
+            currentBook = event.target.value;
+            await loadWordsForBook();
+        }
+
+        // 加载当前单词本的单词
+        async function loadWordsForBook() {
+            if (!currentBook) return;
+
+            try {
+                const response = await fetch(BASE_URL+`/books/${currentBook}/words`);
+                words = await response.json();
+                updateStats();
+
+                if (words.length === 0) {
+                    showNotification('当前单词本为空，请添加单词', false);
+                }
+            } catch (error) {
+                console.error('加载单词失败:', error);
+                words = [];
+                showNotification('加载单词失败', false);
+            }
+        }
+
+        // 更新统计数据
+        function updateStats() {
+            const total = words.length;
+            const familiar = words.filter(word => word.familiar).length;
+            const remaining = total - familiar;
+
+            totalWordsEl.textContent = total;
+            familiarWordsEl.textContent = familiar;
+            remainingWordsEl.textContent = remaining;
+        }
+
+        // 添加单个单词
+        async function addSingleWord() {
+            const word = newWordEl.value.trim();
+            const translation = newTranslationEl.value.trim();
+
+            if (!word || !translation || !currentBook) {
+                showNotification('单词和翻译不能为空', false);
+                return;
+            }
+
+            try {
+                const response = await fetch(BASE_URL+`/books/${currentBook}/words`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ word, translation })
+                });
+
+                if (response.ok) {
+                    await loadWordsForBook();
+                    newWordEl.value = '';
+                    newTranslationEl.value = '';
+                    showNotification(`单词"${word}"添加成功`);
+                }
+            } catch (error) {
+                console.error('添加单词失败:', error);
+                showNotification('添加单词失败', false);
+            }
+        }
+
+        // 导入CSV
+        async function importCsv() {
+            if (!csvFileEl.files.length || !currentBook) {
+                showNotification('请选择CSV文件', false);
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', csvFileEl.files[0]);
+
+            try {
+                const response = await fetch(BASE_URL+`/books/${currentBook}/import`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    await loadWordsForBook();
+                    csvFileEl.value = '';
+                    showNotification('CSV导入成功');
+                } else {
+                    const errorData = await response.json();
+                    showNotification(`导入失败: ${errorData.error}`, false);
+                }
+            } catch (error) {
+                console.error('导入CSV失败:', error);
+                showNotification('CSV导入失败', false);
+            }
+        }
+
+        // 开始学习模式
+        async function startPracticeMode(mode) {
+            if (!currentBook) {
+                showNotification('请先创建或选择单词本', false);
+                return;
+            }
+
+            if (words.length === 0) {
+                showNotification('当前单词本为空，请添加单词', false);
+                return;
+            }
+
+            // 加载单词
+            await loadWordsForBook();
+
+            // 设置当前模式
+            currentMode = mode;
+
+            // 获取需要练习的单词（未标记为"熟"的单词）
+            practiceOrder = [...words.filter(word => !word.familiar)];
+
+            if (practiceOrder.length === 0) {
+                practiceArea.innerHTML = `
+                    <div class="word-display">🎉🎉🎉🎉🎉🎉🎉🎉 太棒了！</div>
+                    <p>您已经掌握了所有单词！</p>
+                    <p>继续添加新单词或创建新单词本</p>
+                `;
+                return;
+            }
+
+            // 打乱单词顺序
+            shuffleArray(practiceOrder);
+
+            // 重置选择状态
+            isChoiceMade = false;
+            selectedOption = null;
+
+            // 开始第一个单词
+            showNextWord();
+        }
+
+        // 显示下一个单词
+        function showNextWord() {
+            if (practiceOrder.length === 0) {
+                practiceArea.innerHTML = `
+                    <div class="word-display">🎉🎉🎉🎉🎉🎉🎉🎉 练习完成！</div>
+                    <p>您已完成当前单词本的所有练习</p>
+                    <button class="btn-next" onclick="startPracticeMode(currentMode)">重新开始</button>
+                `;
+                return;
+            }
+
+            // 获取下一个单词
+            currentWord = practiceOrder.pop();
+
+            // 重置选择状态
+            isChoiceMade = false;
+            selectedOption = null;
+
+            // 根据模式显示内容
+            switch (currentMode) {
+                case 'choice':
+                    showChoicePractice();
+                    break;
+                case 'recall':
+                    showRecallPractice();
+                    break;
+                case 'listen':
+                    showListenPractice();
+                    break;
+            }
+        }
+
+        // 四选一模式
+        function showChoicePractice() {
+            // 获取3个随机错误选项
+            const otherWords = words
+                .filter(w => w.id !== currentWord.id && w.translation !== currentWord.translation)
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 3)
+                .map(w => w.translation);
+
+            const allOptions = [currentWord.translation, ...otherWords];
+            shuffleArray(allOptions);
+
+            practiceArea.innerHTML = `
+                <div class="word-display">${currentWord.word}</div>
+                <p class="instruction">请选择正确的中文翻译：</p>
+                <div class="choices">
+                    ${allOptions.map((opt, i) => `
+                        <div class="choice-btn" data-option="${opt}">${opt}</div>
+                    `).join('')}
+                </div>
+                <div id="choice-result" class="choice-result hidden"></div>
+            `;
+
+            document.querySelectorAll('.choice-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (isChoiceMade) return; // 防止重复选择
+                    
+                    isChoiceMade = true;
+                    selectedOption = btn.dataset.option;
+                    
+                    const isCorrect = selectedOption === currentWord.translation;
+                    const resultEl = document.getElementById('choice-result');
+                    
+                    // 隐藏所有选项
+                    document.querySelector('.choices').classList.add('hidden');
+                    
+                    // 显示紧凑的结果反馈
+                    resultEl.innerHTML = `
+                        <div class="compact-feedback ${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}">
+                            <span class="material-symbols-outlined feedback-icon">
+                                ${isCorrect ? 'check_circle' : 'cancel'}
+                            </span>
+                            <span>${isCorrect ? '回答正确！' : '回答错误'}</span>
+                            <span class="result-translation">正确答案: ${currentWord.translation}</span>
+                        </div>
+                    `;
+                    resultEl.classList.remove('hidden');
+                    
+                    // 高亮显示用户的选择
+                    btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+                });
+            });
+        }
+
+        // 快速回忆模式
+        function showRecallPractice() {
+            practiceArea.innerHTML = `
+                <div class="word-display">${currentWord.word}</div>
+                <p class="instruction">你认识这个单词吗？</p>
+                <div class="controls">
+                    <button class="btn-familiar" id="btn-remember">
+                        <span class="material-symbols-outlined">check</span>认识
+                    </button>
+                    <button class="btn-next" id="btn-forget">
+                        <span class="material-symbols-outlined">close</span>不认识
+                    </button>
+                </div>
+                <div id="translation-result" class="hidden">
+                    <div class="translation-display">${currentWord.translation}</div>
+                </div>
+            `;
+
+            document.getElementById('btn-remember').addEventListener('click', () => {
+                // 继续下一个单词
+                showNextWord();
+            });
+
+            document.getElementById('btn-forget').addEventListener('click', () => {
+                document.getElementById('translation-result').classList.remove('hidden');
+            });
+        }
+
+        // 听写练习模式
+        function showListenPractice() {
+            practiceArea.innerHTML = `
+                <div class="word-display">
+                    <span class="material-symbols-outlined">hearing</span>
+                    听写练习
+                </div>
+                <div class="translation-display">${currentWord.translation}</div>
+                <p class="instruction">请拼写英文单词：</p>
+                
+                <div class="input-group">
+                    <input type="text" id="dictation-input" placeholder="输入英文单词">
+                    <button class="btn-next" id="check-dictation">
+                        <span class="material-symbols-outlined">check</span>检查
+                    </button>
+                </div>
+                
+                <div class="controls">
+                    <button class="btn-familiar" id="listen-again">
+                        <span class="material-symbols-outlined">volume_up</span>再听一次
+                    </button>
+                </div>
+                
+                <div id="result-feedback"></div>
+            `;
+
+            // 朗读单词
+            speakWord(currentWord.word);
+
+            document.getElementById('check-dictation').addEventListener('click', () => {
+                const input = document.getElementById('dictation-input').value.trim().toLowerCase();
+                const result = input === currentWord.word.toLowerCase();
+                const resultEl = document.getElementById('result-feedback');
+
+                if (result) {
+                    resultEl.innerHTML = `
+                        <div style="color: #06d6a0; font-weight: 600; margin-top: 20px;">
+                            <span class="material-symbols-outlined">check_circle</span>
+                            正确！
+                        </div>
+                    `;
+                } else {
+                    resultEl.innerHTML = `
+                        <div style="color: #ef476f; font-weight: 600; margin-top: 20px;">
+                            <span class="material-symbols-outlined">error</span>
+                            错误！正确拼写: ${currentWord.word}
+                        </div>
+                    `;
+                }
+            });
+
+            document.getElementById('listen-again').addEventListener('click', () => {
+                speakWord(currentWord.word);
+            });
+        }
+
+        // 标记单词为"熟"
+        async function markWordAsFamiliar() {
+            if (!currentBook || !currentWord) {
+                showNotification('没有可标记的单词', false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`/books/${currentBook}/words/${currentWord.id}/familiar`, {
+                    method: 'PUT'
+                });
+
+                if (response.ok) {
+                    // 更新本地状态
+                    const wordIndex = words.findIndex(w => w.id === currentWord.id);
+                    if (wordIndex !== -1) {
+                        words[wordIndex].familiar = true;
+                    }
+
+                    // 更新统计数据
+                    updateStats();
+
+                    // 从练习队列中移除
+                    practiceOrder = practiceOrder.filter(w => w.id !== currentWord.id);
+
+                    // 显示下一个单词
+                    showNextWord();
+
+                    showNotification(`单词"${currentWord.word}"标记为已掌握`);
+                }
+            } catch (error) {
+                console.error('标记单词失败:', error);
+                showNotification('标记单词失败', false);
+            }
+        }
+
+        // 工具函数：随机打乱数组
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // 工具函数：单词朗读
+        function speakWord(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // 启动应用
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

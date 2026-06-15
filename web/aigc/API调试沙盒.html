@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API调试沙盒</title>
+    <style>
+        :root {
+            --primary: #4e73df;
+            --light: #f8f9fc;
+            --dark: #5a5c69;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .request-section {
+            background: var(--light);
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .request-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .request-url {
+            flex: 1;
+            display: flex;
+        }
+        
+        .request-url select {
+            border: 1px solid #ddd;
+            border-right: none;
+            border-radius: 4px 0 0 4px;
+            padding: 8px;
+        }
+        
+        .request-url input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .request-send {
+            padding: 8px 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-top: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+        
+        .tab.active {
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .tab-content {
+            padding: 15px 0;
+        }
+        
+        .response-section {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        
+        .history-section {
+            background: #f0f0f0;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="request-section">
+            <div class="request-controls">
+                <div class="request-url">
+                    <select>
+                        <option>GET</option>
+                        <option>POST</option>
+                        <option>PUT</option>
+                        <option>DELETE</option>
+                    </select>
+                    <input type="text" placeholder="https://api.example.com/data">
+                </div>
+                <button class="request-send">发送</button>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active">参数</div>
+                <div class="tab">Headers</div>
+                <div class="tab">Body</div>
+            </div>
+            
+            <div class="tab-content">
+                <table style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" placeholder="参数名"></td>
+                            <td><input type="text" placeholder="值"></td>
+                            <td><button>删除</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button style="margin-top: 10px;">添加参数</button>
+            </div>
+        </div>
+        
+        <div class="response-section">
+            <div style="margin-bottom: 15px;">
+                <span>状态: <strong>200 OK</strong></span>
+                <span style="margin-left: 20px;">时间: 245ms</span>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active">响应</div>
+                <div class="tab">Headers</div>
+            </div>
+            
+            <pre style="background: #f5f5f5; padding: 15px; border-radius: 4px;">
+{
+  "status": "success",
+  "data": [
+    { "id": 1, "name": "Item 1" },
+    { "id": 2, "name": "Item 2" }
+  ]
+}
+            </pre>
+        </div>
+        
+        <div class="history-section">
+            <strong>历史记录:</strong>
+            <span>GET https://api.example.com/data</span>
+            <span>POST https://api.example.com/users</span>
+        </div>
+    </div>
+
+    <script>
+        // API调试沙盒核心功能
+        class APITester {
+            constructor() {
+                this.history = [];
+                this.init();
+            }
+            
+            init() {
+                this.loadHistory();
+                this.setupEventListeners();
+            }
+            
+            loadHistory() {
+                // 从存储加载历史记录
+            }
+            
+            saveHistory() {
+                // 保存历史记录
+            }
+            
+            sendRequest(method, url, headers, body) {
+                fetch(url, {
+                    method: method,
+                    headers: headers,
+                    body: body
+                })
+                .then(response => {
+                    this.displayResponse(response);
+                    this.addToHistory(method, url);
+                })
+                .catch(error => {
+                    console.error('请求失败:', error);
+                });
+            }
+            
+            displayResponse(response) {
+                // 显示响应结果
+            }
+            
+            addToHistory(method, url) {
+                // 添加到历史记录
+            }
+            
+            setupEventListeners() {
+                document.querySelector('.request-send').addEventListener('click', () => {
+                    const method = document.querySelector('.request-url select').value;
+                    const url = document.querySelector('.request-url input').value;
+                    this.sendRequest(method, url);
+                });
+            }
+        }
+        
+        const tester = new APITester();
+    </script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+[
+  {
+    "id": "1763614497122",
+    "word": "discontent",
+    "translation": "n. 不满",
+    "familiar": true,
+    "createdAt": "2025-09-01T14:10:32.035Z"
+  },
+  {
+    "id": "1763614510291",
+    "word": "evade",
+    "translation": "v.规避,逃避,躲避",
+    "familiar": true,
+    "createdAt": "2025-09-25T13:43:59.757Z"
+  },
+  {
+    "id": "1763614559570",
+    "word": "response",
+    "translation": "n.回答,响应,反应",
+    "familiar": true,
+    "createdAt": "2025-09-01T14:10:32.040Z"
+  },
+  {
+    "id": "1763614578634",
+    "word": "crucial",
+    "translation": "adj.至关紧要的",
+    "familiar": true,
+    "createdAt": "2025-09-09T23:36:55.257Z"
+  },
+  {
+    "id": "1763614593229",
+    "word": "fascinated",
+    "translation": "adj. 着迷的",
+    "familiar": true,
+    "createdAt": "2025-09-01T14:10:32.035Z"
+  },
+  {
+    "id": "1763614608455",
+    "word": "precious",
+    "translation": "adj.宝贵的,贵重的,珍爱的,过于精致的,珍爱的",
+    "familiar": true,
+    "createdAt": "2025-09-25T13:39:57.799Z"
+  },
+  {
+    "id": "1764459069077",
+    "word": "wider",
+    "translation": "adj.宽的,广阔的",
+    "familiar": true,
+    "createdAt": "2025-09-09T23:36:55.255Z"
+  },
+  {
+    "id": "1764459083150",
+    "word": "underestimate",
+    "translation": "vt.低估,看轻n.低估",
+    "familiar": true,
+    "createdAt": "2025-11-08T12:16:04.326Z"
+  },
+  {
+    "id": "1764459087602",
+    "word": "radical",
+    "translation": "adj.根本的,基本的,激进的n.激进分子",
+    "familiar": true,
+    "createdAt": "2025-09-01T14:10:32.041Z"
+  },
+  {
+    "id": "1764459090466",
+    "word": "course",
+    "translation": "n./v. 课程,流动",
+    "familiar": true,
+    "createdAt": "2025-09-01T14:10:32.036Z"
+  },
+  {
+    "id": "1764459092888",
+    "word": "spread",
+    "translation": "n.伸展,展开,传播,蔓延,酒席,宴会,桌布v.伸展,展开,铺,涂,敷,摆,传播,散布",
+    "familiar": true,
+    "createdAt": "2025-09-01T14:10:32.040Z"
+  },
+  {
+    "id": "1764459167637",
+    "word": "windy",
+    "translation": "adj.有风的,刮风的,多风的,风强的,腹胀的,吹牛的",
+    "familiar": true,
+    "createdAt": "2025-07-16T15:35:42.215Z"
+  },
+  {
+    "id": "1764459233795",
+    "word": "resume",
+    "translation": "n.摘要,概略,<美> 履历vt.再继续,重新开始,重新占用,再用,恢复",
+    "familiar": true,
+    "createdAt": "2025-07-16T15:35:42.213Z"
+  },
+  {
+    "id": "1764459546274",
+    "word": "confusion",
+    "translation": "n.混乱,混淆",
+    "familiar": true,
+    "createdAt": "2025-07-16T15:35:42.211Z"
+  },
+  {
+    "id": "1764459552148",
+    "word": "unconscious",
+    "translation": "adj.不省人事,未发觉的,无意识的",
+    "familiar": true,
+    "createdAt": "2025-07-16T15:35:42.210Z"
+  },
+  {
+    "id": "1765327424266",
+    "word": "evaluate",
+    "translation": "vt.评价,估计,求...的值v.评价",
+    "familiar": true,
+    "createdAt": "2025-09-09T23:36:55.256Z"
+  },
+  {
+    "id": "1765327427563",
+    "word": "intellectual",
+    "translation": "adj.智力的,有智力的,显示智力的n.知识分子",
+    "familiar": true,
+    "createdAt": "2025-09-01T14:10:32.040Z"
+  },
+  {
+    "id": "1765327438893",
+    "word": "contract",
+    "translation": "n.合同,契约,婚约v.使缩短,感染,订约",
+    "familiar": true,
+    "createdAt": "2025-09-25T13:39:57.799Z"
+  },
+  {
+    "id": "1765327444230",
+    "word": "grant",
+    "translation": "vt.同意,准予,承认(某事为真)～",
+    "familiar": true,
+    "createdAt": "2025-09-01T14:10:32.041Z"
+  },
+  {
+    "id": "1765327447704",
+    "word": "sitter",
+    "translation": "n.被画像的人,代人临时看管小孩的人",
+    "familiar": true,
+    "createdAt": "2025-11-08T12:16:01.205Z"
+  },
+  {
+    "id": "1765327452268",
+    "word": "byproduct",
+    "translation": "n. 副产品",
+    "familiar": true,
+    "createdAt": "2025-09-01T14:10:32.036Z"
+  },
+  {
+    "id": "1765327461723",
+    "word": "absorption",
+    "translation": "n.吸收,专注",
+    "familiar": true,
+    "createdAt": "2025-09-01T14:10:32.037Z"
+  },
+  {
+    "id": "1765426653356",
+    "word": "retire",
+    "translation": "vi.退休,引退,退却,撤退,就寝",
+    "familiar": true,
+    "createdAt": "2025-11-12T10:43:08.086Z"
+  },
+  {
+    "id": "1765426655145",
+    "word": "hamper",
+    "translation": "v.妨碍,牵制",
+    "familiar": true,
+    "createdAt": "2025-09-01T14:10:32.040Z"
+  },
+  {
+    "id": "1765426657798",
+    "word": "allude",
+    "translation": "vi.暗指,影射,间接提到",
+    "familiar": true,
+    "createdAt": "2025-11-08T12:16:04.326Z"
+  },
+  {
+    "id": "1765426660820",
+    "word": "suited",
+    "translation": "adj.适合的,相配的",
+    "familiar": true,
+    "createdAt": "2025-09-01T14:10:32.036Z"
+  },
+  {
+    "id": "1765426669658",
+    "word": "interpersonal",
+    "translation": "adj.人与人之间的,关于人与人之间关系的",
+    "familiar": true,
+    "createdAt": "2025-09-01T14:10:32.040Z"
+  }
+]

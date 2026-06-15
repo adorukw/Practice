@@ -1,0 +1,12 @@
+/* 示例CSS文件 */
+body {
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+.demo-box {
+    border: 2px solid #3498db;
+    padding: 20px;
+    border-radius: 10px;
+    background: white;
+}

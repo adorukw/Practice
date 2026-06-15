@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@theme {
+  --color-user: #3b82f6;
+  --color-user-bg: #eff6ff;
+  --color-user-border: #93c5fd;
+  --color-assistant: #8b5cf6;
+  --color-assistant-bg: #f5f3ff;
+  --color-assistant-border: #c4b5fd;
+  --color-thinking: #6b7280;
+  --color-thinking-bg: #f9fafb;
+  --color-thinking-border: #d1d5db;
+  --color-toolcall: #f59e0b;
+  --color-toolcall-bg: #fffbeb;
+  --color-toolcall-border: #fcd34d;
+  --color-toolresult: #10b981;
+  --color-toolresult-bg: #ecfdf5;
+  --color-toolresult-border: #6ee7b7;
+  --color-error: #ef4444;
+  --color-error-bg: #fef2f2;
+  --color-error-border: #fca5a5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #app {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 20px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.vue-flow__node {
+  cursor: pointer;
+  overflow: visible;
+}
+
+.vue-flow__node > div {
+  overflow: hidden;
+}
+
+.vue-flow__edge-path {
+  stroke-linecap: round;
+}
+
+.vue-flow__minimap {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.vue-flow__controls {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}

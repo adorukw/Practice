@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>技术简历生成器</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #4e73df;
+            --secondary: #858796;
+            --success: #1cc88a;
+            --light: #f8f9fc;
+            --dark: #5a5c69;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 100vh;
+            gap: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .editor-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            overflow-y: auto;
+        }
+        
+        .preview-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .section {
+            margin-bottom: 25px;
+        }
+        
+        h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 5px;
+            margin-top: 0;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #2e59d9;
+        }
+        
+        .template-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .template-option {
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+        }
+        
+        .template-option.active {
+            border-color: var(--primary);
+            background: rgba(78, 115, 223, 0.1);
+        }
+        
+        .resume {
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .resume-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .resume-header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        
+        .resume-header p {
+            margin: 5px 0;
+            color: var(--dark);
+        }
+        
+        .resume-section {
+            margin-bottom: 20px;
+        }
+        
+        .resume-section h2 {
+            font-size: 20px;
+            margin: 0 0 10px 0;
+            color: var(--primary);
+        }
+        
+        .resume-item {
+            margin-bottom: 15px;
+        }
+        
+        .resume-item h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+        
+        .resume-item .date {
+            color: var(--secondary);
+            font-style: italic;
+            margin: 5px 0;
+        }
+        
+        .skills-chart {
+            height: 200px;
+            margin: 20px 0;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-left: 10px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary);
+        }
+        
+        .export-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="editor-panel">
+            <h1>简历编辑器</h1>
+            
+            <div class="section">
+                <h2>个人信息</h2>
+                <input type="text" id="name" placeholder="姓名">
+                <input type="text" id="title" placeholder="职位">
+                <input type="email" id="email" placeholder="邮箱">
+                <input type="tel" id="phone" placeholder="电话">
+                <input type="text" id="location" placeholder="所在地">
+                <textarea id="summary" placeholder="个人简介"></textarea>
+            </div>
+            
+            <div class="section">
+                <h2>技能</h2>
+                <div id="skills-container">
+                    <div class="skill-item">
+                        <input type="text" placeholder="技能名称" class="skill-name">
+                        <input type="range" min="0" max="100" value="80" class="skill-level">
+                        <span class="skill-value">80%</span>
+                    </div>
+                </div>
+                <button id="add-skill">添加技能</button>
+            </div>
+            
+            <div class="section">
+                <h2>工作经历</h2>
+                <div id="experience-container">
+                    <div class="experience-item">
+                        <input type="text" placeholder="职位">
+                        <input type="text" placeholder="公司">
+                        <input type="text" placeholder="日期 (如: 2020-2023)">
+                        <textarea placeholder="工作描述"></textarea>
+                    </div>
+                </div>
+                <button id="add-experience">添加经历</button>
+            </div>
+            
+            <div class="section">
+                <h2>教育背景</h2>
+                <div id="education-container">
+                    <div class="education-item">
+                        <input type="text" placeholder="学位">
+                        <input type="text" placeholder="学校">
+                        <input type="text" placeholder="日期 (如: 2016-2020)">
+                    </div>
+                </div>
+                <button id="add-education">添加教育经历</button>
+            </div>
+            
+            <div class="section">
+                <h2>模板选择</h2>
+                <div class="template-selector">
+                    <div class="template-option active" data-template="professional">专业版</div>
+                    <div class="template-option" data-template="modern">现代版</div>
+                    <div class="template-option" data-template="creative">创意版</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="preview-panel">
+            <div class="export-controls">
+                <button id="export-pdf">导出PDF</button>
+                <button id="print">打印</button>
+            </div>
+            
+            <div class="resume" id="resume-preview">
+                <!-- 简历预览将在这里动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简历生成器核心功能
+        class ResumeGenerator {
+            constructor() {
+                this.resumeData = {
+                    personal: {
+                        name: '张三',
+                        title: '前端开发工程师',
+                        email: 'zhangsan@example.com',
+                        phone: '138-8888-8888',
+                        location: '北京市',
+                        summary: '拥有5年前端开发经验，精通React、Vue等前端框架，对用户体验有深入理解。'
+                    },
+                    skills: [
+                        { name: 'JavaScript', level: 90 },
+                        { name: 'React', level: 85 },
+                        { name: 'Vue.js', level: 80 },
+                        { name: 'HTML/CSS', level: 95 }
+                    ],
+                    experience: [
+                        {
+                            position: '高级前端工程师',
+                            company: '科技公司',
+                            period: '2020-2023',
+                            description: '负责公司核心产品的前端架构设计和开发，优化用户体验，提高页面性能。'
+                        },
+                        {
+                            position: '前端开发工程师',
+                            company: '互联网公司',
+                            period: '2018-2020',
+                            description: '参与多个Web应用开发，实现响应式设计，确保跨浏览器兼容性。'
+                        }
+                    ],
+                    education: [
+                        {
+                            degree: '计算机科学学士',
+                            school: '北京大学',
+                            period: '2014-2018'
+                        }
+                    ],
+                    template: 'professional'
+                };
+                
+                this.init();
+            }
+            
+            init() {
+                this.setupEventListeners();
+                this.loadSampleData();
+                this.renderResume();
+            }
+            
+            loadSampleData() {
+                // 设置表单值
+                document.getElementById('name').value = this.resumeData.personal.name;
+                document.getElementById('title').value = this.resumeData.personal.title;
+                document.getElementById('email').value = this.resumeData.personal.email;
+                document.getElementById('phone').value = this.resumeData.personal.phone;
+                document.getElementById('location').value = this.resumeData.personal.location;
+                document.getElementById('summary').value = this.resumeData.personal.summary;
+                
+                // 渲染技能
+                this.renderSkills();
+                
+                // 渲染工作经历
+                this.renderExperience();
+                
+                // 渲染教育背景
+                this.renderEducation();
+            }
+            
+            renderSkills() {
+                const container = document.getElementById('skills-container');
+                container.innerHTML = '';
+                
+                this.resumeData.skills.forEach((skill, index) => {
+                    const skillItem = document.createElement('div');
+                    skillItem.className = 'skill-item';
+                    skillItem.innerHTML = `
+                        <input type="text" placeholder="技能名称" class="skill-name" value="${skill.name}">
+                        <input type="range" min="0" max="100" value="${skill.level}" class="skill-level">
+                        <span class="skill-value">${skill.level}%</span>
+                    `;
+                    container.appendChild(skillItem);
+                    
+                    // 添加事件监听
+                    const levelInput = skillItem.querySelector('.skill-level');
+                    const valueSpan = skillItem.querySelector('.skill-value');
+                    
+                    levelInput.addEventListener('input', () => {
+                        valueSpan.textContent = `${levelInput.value}%`;
+                        this.resumeData.skills[index].level = parseInt(levelInput.value);
+                        this.renderResume();
+                    });
+                    
+                    const nameInput = skillItem.querySelector('.skill-name');
+                    nameInput.addEventListener('input', () => {
+                        this.resumeData.skills[index].name = nameInput.value;
+                        this.renderResume();
+                    });
+                });
+            }
+            
+            renderExperience() {
+                const container = document.getElementById('experience-container');
+                container.innerHTML = '';
+                
+                this.resumeData.experience.forEach((exp, index) => {
+                    const expItem = document.createElement('div');
+                    expItem.className = 'experience-item';
+                    expItem.innerHTML = `
+                        <input type="text" placeholder="职位" value="${exp.position}">
+                        <input type="text" placeholder="公司" value="${exp.company}">
+                        <input type="text" placeholder="日期" value="${exp.period}">
+                        <textarea placeholder="工作描述">${exp.description}</textarea>
+                    `;
+                    container.appendChild(expItem);
+                    
+                    // 添加事件监听
+                    const inputs = expItem.querySelectorAll('input, textarea');
+                    inputs.forEach(input => {
+                        input.addEventListener('input', () => {
+                            if (input.tagName === 'INPUT') {
+                                if (input.placeholder === '职位') {
+                                    this.resumeData.experience[index].position = input.value;
+                                } else if (input.placeholder === '公司') {
+                                    this.resumeData.experience[index].company = input.value;
+                                } else if (input.placeholder === '日期') {
+                                    this.resumeData.experience[index].period = input.value;
+                                }
+                            } else if (input.tagName === 'TEXTAREA') {
+                                this.resumeData.experience[index].description = input.value;
+                            }
+                            this.renderResume();
+                        });
+                    });
+                });
+            }
+            
+            renderEducation() {
+                const container = document.getElementById('education-container');
+                container.innerHTML = '';
+                
+                this.resumeData.education.forEach((edu, index) => {
+                    const eduItem = document.createElement('div');
+                    eduItem.className = 'education-item';
+                    eduItem.innerHTML = `
+                        <input type="text" placeholder="学位" value="${edu.degree}">
+                        <input type="text" placeholder="学校" value="${edu.school}">
+                        <input type="text" placeholder="日期" value="${edu.period}">
+                    `;
+                    container.appendChild(eduItem);
+                    
+                    // 添加事件监听
+                    const inputs = eduItem.querySelectorAll('input');
+                    inputs.forEach(input => {
+                        input.addEventListener('input', () => {
+                            if (input.placeholder === '学位') {
+                                this.resumeData.education[index].degree = input.value;
+                            } else if (input.placeholder === '学校') {
+                                this.resumeData.education[index].school = input.value;
+                            } else if (input.placeholder === '日期') {
+                                this.resumeData.education[index].period = input.value;
+                            }
+                            this.renderResume();
+                        });
+                    });
+                });
+            }
+            
+            renderResume() {
+                const preview = document.getElementById('resume-preview');
+                preview.innerHTML = '';
+                
+                // 更新简历数据
+                this.updateResumeData();
+                
+                // 根据模板渲染简历
+                if (this.resumeData.template === 'professional') {
+                    this.renderProfessionalTemplate(preview);
+                } else if (this.resumeData.template === 'modern') {
+                    this.renderModernTemplate(preview);
+                } else if (this.resumeData.template === 'creative') {
+                    this.renderCreativeTemplate(preview);
+                }
+                
+                // 渲染技能雷达图
+                this.renderSkillsChart();
+            }
+            
+            renderProfessionalTemplate(container) {
+                const personal = this.resumeData.personal;
+                
+                // 简历头部
+                const header = document.createElement('div');
+                header.className = 'resume-header';
+                header.innerHTML = `
+                    <h1>${personal.name}</h1>
+                    <p>${personal.title}</p>
+                    <p>${personal.email} | ${personal.phone} | ${personal.location}</p>
+                `;
+                container.appendChild(header);
+                
+                // 个人简介
+                const summary = document.createElement('div');
+                summary.className = 'resume-section';
+                summary.innerHTML = `
+                    <h2>个人简介</h2>
+                    <p>${personal.summary}</p>
+                `;
+                container.appendChild(summary);
+                
+                // 技能部分
+                const skillsSection = document.createElement('div');
+                skillsSection.className = 'resume-section';
+                skillsSection.innerHTML = '<h2>技能</h2>';
+                
+                const skillsContainer = document.createElement('div');
+                skillsContainer.className = 'skills-container';
+                skillsSection.appendChild(skillsContainer);
+                
+                // 技能图表容器
+                const chartContainer = document.createElement('div');
+                chartContainer.className = 'skills-chart';
+                chartContainer.id = 'skills-chart';
+                skillsSection.appendChild(chartContainer);
+                
+                container.appendChild(skillsSection);
+                
+                // 工作经历
+                const experienceSection = document.createElement('div');
+                experienceSection.className = 'resume-section';
+                experienceSection.innerHTML = '<h2>工作经历</h2>';
+                
+                this.resumeData.experience.forEach(exp => {
+                    const expItem = document.createElement('div');
+                    expItem.className = 'resume-item';
+                    expItem.innerHTML = `
+                        <h3>${exp.position} - ${exp.company}</h3>
+                        <p class="date">${exp.period}</p>
+                        <p>${exp.description}</p>
+                    `;
+                    experienceSection.appendChild(expItem);
+                });
+                container.appendChild(experienceSection);
+                
+                // 教育背景
+                const educationSection = document.createElement('div');
+                educationSection.className = 'resume-section';
+                educationSection.innerHTML = '<h2>教育背景</h2>';
+                
+                this.resumeData.education.forEach(edu => {
+                    const eduItem = document.createElement('div');
+                    eduItem.className = 'resume-item';
+                    eduItem.innerHTML = `
+                        <h3>${edu.degree}</h3>
+                        <p class="date">${edu.school}, ${edu.period}</p>
+                    `;
+                    educationSection.appendChild(eduItem);
+                });
+                container.appendChild(educationSection);
+            }
+            
+            renderSkillsChart() {
+                const ctx = document.getElementById('skills-chart').getContext('2d');
+                
+                const skillNames = this.resumeData.skills.map(skill => skill.name);
+                const skillLevels = this.resumeData.skills.map(skill => skill.level);
+                
+                new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: skillNames,
+                        datasets: [{
+                            label: '技能水平',
+                            data: skillLevels,
+                            backgroundColor: 'rgba(78, 115, 223, 0.2)',
+                            borderColor: 'rgba(78, 115, 223, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(78, 115, 223, 1)'
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            r: {
+                                angleLines: {
+                                    display: true
+                                },
+                                suggestedMin: 0,
+                                suggestedMax: 100
+                            }
+                        }
+                    }
+                });
+            }
+            
+            updateResumeData() {
+                this.resumeData.personal = {
+                    name: document.getElementById('name').value,
+                    title: document.getElementById('title').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    location: document.getElementById('location').value,
+                    summary: document.getElementById('summary').value
+                };
+            }
+            
+            setupEventListeners() {
+                // 添加技能按钮
+                document.getElementById('add-skill').addEventListener('click', () => {
+                    this.resumeData.skills.push({ name: '新技能', level: 80 });
+                    this.renderSkills();
+                    this.renderResume();
+                });
+                
+                // 添加工作经历按钮
+                document.getElementById('add-experience').addEventListener('click', () => {
+                    this.resumeData.experience.push({
+                        position: '',
+                        company: '',
+                        period: '',
+                        description: ''
+                    });
+                    this.renderExperience();
+                });
+                
+                // 添加教育背景按钮
+                document.getElementById('add-education').addEventListener('click', () => {
+                    this.resumeData.education.push({
+                        degree: '',
+                        school: '',
+                        period: ''
+                    });
+                    this.renderEducation();
+                });
+                
+                // 模板选择
+                document.querySelectorAll('.template-option').forEach(option => {
+                    option.addEventListener('click', () => {
+                        document.querySelectorAll('.template-option').forEach(opt => {
+                            opt.classList.remove('active');
+                        });
+                        option.classList.add('active');
+                        this.resumeData.template = option.dataset.template;
+                        this.renderResume();
+                    });
+                });
+                
+                // 个人信息输入监听
+                const personalInputs = [
+                    'name', 'title', 'email', 'phone', 'location', 'summary'
+                ];
+                
+                personalInputs.forEach(id => {
+                    document.getElementById(id).addEventListener('input', () => {
+                        this.updateResumeData();
+                        this.renderResume();
+                    });
+                });
+                
+                // 导出PDF
+                document.getElementById('export-pdf').addEventListener('click', () => {
+                    alert('在实际应用中，这里会使用jsPDF等库将简历导出为PDF');
+                });
+                
+                // 打印
+                document.getElementById('print').addEventListener('click', () => {
+                    window.print();
+                });
+            }
+        }
+        
+        const resumeGenerator = new ResumeGenerator();
+    </script>
+</body>
+</html>

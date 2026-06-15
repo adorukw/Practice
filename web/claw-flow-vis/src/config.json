@@ -1,0 +1,6 @@
+{
+  "deepseekApiKey": "sk-17575eeeb83d441a870396252b7676ad",
+  "deepseekApiUrl": "https://api.deepseek.com/v1/chat/completions",
+  "deepseekModel": "deepseek-chat",
+  "autoSummarize": true
+}

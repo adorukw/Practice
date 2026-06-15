@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>餐次食物价格与营养计算器</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            color: #2575fc;
+            border-bottom: 2px solid #eaeaea;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            background-color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        th {
+            background-color: #f1f7ff;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .nutrition-label {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-right: 4px;
+        }
+
+        .energy-label {
+            background-color: #ffe8e8;
+            color: #d32f2f;
+        }
+
+        .carbs-label {
+            background-color: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .protein-label {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .fat-label {
+            background-color: #fff8e1;
+            color: #f57f17;
+        }
+
+        .calculator {
+            background-color: #f1f7ff;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: white;
+            transition: border-color 0.3s;
+        }
+
+        select:focus {
+            border-color: #2575fc;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(37, 117, 252, 0.2);
+        }
+
+        .result {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2575fc;
+            margin: 15px 0;
+        }
+
+        .meal-details {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        .meal-item {
+            display: inline-block;
+            background-color: #e6f0ff;
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin: 5px;
+        }
+
+        .nutrition-summary {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .nutrition-card {
+            text-align: center;
+            padding: 10px 15px;
+            min-width: 120px;
+        }
+
+        .nutrition-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .nutrition-title {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .energy-card .nutrition-value {
+            color: #d32f2f;
+        }
+
+        .carbs-card .nutrition-value {
+            color: #388e3c;
+        }
+
+        .protein-card .nutrition-value {
+            color: #1976d2;
+        }
+
+        .fat-card .nutrition-value {
+            color: #f57f17;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #eaeaea;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            th,
+            td {
+                padding: 8px 10px;
+                font-size: 14px;
+            }
+
+            .price {
+                font-size: 2rem;
+            }
+
+            .nutrition-summary {
+                justify-content: center;
+            }
+
+            .nutrition-card {
+                min-width: 100px;
+                padding: 8px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 1.7rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .calculator,
+            .result {
+                padding: 15px;
+            }
+
+            .price {
+                font-size: 1.8rem;
+            }
+
+            .nutrition-value {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>餐次食物价格与营养计算器</h1>
+            <p class="subtitle">计算餐次组合的价格与营养成分，轻松管理每日饮食预算与营养摄入</p>
+        </header>
+
+        <div class="content">
+            <div class="section">
+                <h2>食物基本信息</h2>
+                <div class="table-container">
+                    <table id="foodTable">
+                        <thead>
+                            <tr>
+                                <th>食物名称</th>
+                                <th>质量</th>
+                                <th>数量</th>
+                                <th>总价(元)</th>
+                                <th>单价(元)</th>
+                                <th>能量(kJ)</th>
+                                <th>碳水(g)</th>
+                                <th>蛋白质(g)</th>
+                                <th>脂肪(g)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 数据将通过JavaScript填充 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>预设餐次组合</h2>
+                <div class="table-container">
+                    <table id="mealTable">
+                        <thead>
+                            <tr>
+                                <th>餐次</th>
+                                <th>食物1</th>
+                                <th>数量1</th>
+                                <th>食物2</th>
+                                <th>数量2</th>
+                                <th>食物3</th>
+                                <th>数量3</th>
+                                <th>食物4</th>
+                                <th>数量4</th>
+                                <th>食物5</th>
+                                <th>数量5</th>
+                                <th>总价(元)</th>
+                                <th>能量(kJ)</th>
+                                <th>碳水(g)</th>
+                                <th>蛋白质(g)</th>
+                                <th>脂肪(g)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 数据将通过JavaScript填充 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>餐次价格与营养计算</h2>
+                <div class="calculator">
+                    <div class="form-group">
+                        <label for="mealSelect">选择餐次：</label>
+                        <select id="mealSelect">
+                            <option value="">-- 请选择餐次 --</option>
+                            <!-- 选项将通过JavaScript填充 -->
+                        </select>
+                    </div>
+
+                    <div class="result">
+                        <h3>餐次总价</h3>
+                        <div class="price" id="totalPrice">0.00 元</div>
+                        <div class="meal-details" id="mealDetails">
+                            请从上方选择餐次查看详情
+                        </div>
+                        <div class="nutrition-summary" id="nutritionSummary">
+                            <!-- 营养信息将通过JavaScript填充 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>餐次食物价格与营养计算器 &copy; 2023 | 轻松管理您的饮食预算与营养摄入</p>
+        </footer>
+    </div>
+
+    <script>
+        // 扩展食物数据结构，增加营养信息
+        const foods = [
+            {
+                name: "每日坚果",
+                weight: "25g",
+                quantity: 30,
+                totalPrice: 35.92,
+                unitPrice: 1.197333333,
+                energy: 554,    // 千焦
+                carbs: 11.2,      // 克
+                protein: 2.2,     // 克
+                fat: 8.8         // 克
+            },
+            {
+                name: "鲨鱼菲特鸡胸肉",
+                weight: "50g",
+                quantity: 32,
+                totalPrice: 40.19,
+                unitPrice: 1.2559375,
+                energy: 239,
+                carbs: 0,
+                protein: 12.5,
+                fat: 0.7
+            },
+            {
+                name: "光明纯牛奶",
+                weight: "250ml",
+                quantity: 24,
+                totalPrice: 54.80,
+                unitPrice: 2.283333333,
+                energy: 688,
+                carbs: 11.8,
+                protein: 8,
+                fat: 9.5
+            },
+            {
+                name: "鲨鱼菲特全麦面包",
+                weight: "50g",
+                quantity: 40,
+                totalPrice: 32.70,
+                unitPrice: 0.8175,
+                energy: 532,
+                carbs: 23.6,
+                protein: 5.3,
+                fat: 0
+            },
+            {
+                name: "鸡蛋",
+                weight: "50g",
+                quantity: 20,
+                totalPrice: 7.90,
+                unitPrice: 0.395,
+                energy: 300,
+                carbs: 0,
+                protein: 6.3,
+                fat: 4.8
+            }
+        ];
+
+        // 餐次数据
+        const meals = [
+            {
+                name: "早餐1",
+                foods: [
+                    { name: "每日坚果", quantity: 1 },
+                    { name: "鲨鱼菲特鸡胸肉", quantity: 1 },
+                    { name: "光明纯牛奶", quantity: 1 },
+                    { name: "鲨鱼菲特全麦面包", quantity: 1 },
+                    { name: "鸡蛋", quantity: 2 }
+                ],
+                totalPrice: 0,
+                energy: 0,
+                carbs: 0,
+                protein: 0,
+                fat: 0
+            },
+            {
+                name: "晚餐1",
+                foods: [
+                    { name: "鲨鱼菲特鸡胸肉", quantity: 1 },
+                    { name: "光明纯牛奶", quantity: 1 },
+                    { name: "鲨鱼菲特全麦面包", quantity: 1 },
+                    { name: "鸡蛋", quantity: 1 }
+                ],
+                totalPrice: 0,
+                energy: 0,
+                carbs: 0,
+                protein: 0,
+                fat: 0
+            },
+            {
+                name: "轻食午餐",
+                foods: [
+                    { name: "鲨鱼菲特鸡胸肉", quantity: 2 },
+                    { name: "鲨鱼菲特全麦面包", quantity: 1 },
+                    { name: "每日坚果", quantity: 1 }
+                ],
+                totalPrice: 0,
+                energy: 0,
+                carbs: 0,
+                protein: 0,
+                fat: 0
+            }
+        ];
+
+        // 初始化函数
+        function initialize() {
+            populateFoodTable();
+            calculateMealNutrition();
+            populateMealTable();
+            populateMealSelect();
+            setupEventListeners();
+        }
+
+        // 填充食物表格（带营养信息）
+        function populateFoodTable() {
+            const tbody = document.querySelector('#foodTable tbody');
+            tbody.innerHTML = '';
+
+            foods.forEach(food => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${food.name}</td>
+                    <td>${food.weight}</td>
+                    <td>${food.quantity}</td>
+                    <td>${food.totalPrice.toFixed(2)}</td>
+                    <td>${food.unitPrice.toFixed(6)}</td>
+                    <td>${food.energy}</td>
+                    <td>${food.carbs}</td>
+                    <td>${food.protein}</td>
+                    <td>${food.fat}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // 计算餐次营养信息
+        function calculateMealNutrition() {
+            meals.forEach(meal => {
+                let totalPrice = 0;
+                let totalEnergy = 0;
+                let totalCarbs = 0;
+                let totalProtein = 0;
+                let totalFat = 0;
+
+                meal.foods.forEach(mealFood => {
+                    const food = foods.find(f => f.name === mealFood.name);
+                    if (food) {
+                        totalPrice += food.unitPrice * mealFood.quantity;
+                        totalEnergy += food.energy * mealFood.quantity;
+                        totalCarbs += food.carbs * mealFood.quantity;
+                        totalProtein += food.protein * mealFood.quantity;
+                        totalFat += food.fat * mealFood.quantity;
+                    }
+                });
+
+                meal.totalPrice = totalPrice;
+                meal.energy = totalEnergy;
+                meal.carbs = totalCarbs;
+                meal.protein = totalProtein;
+                meal.fat = totalFat;
+            });
+        }
+
+        // 填充餐次表格（带营养信息）
+        function populateMealTable() {
+            const tbody = document.querySelector('#mealTable tbody');
+            tbody.innerHTML = '';
+
+            meals.forEach(meal => {
+                const row = document.createElement('tr');
+
+                // 创建餐次名称单元格
+                const mealNameCell = document.createElement('td');
+                mealNameCell.textContent = meal.name;
+
+                // 创建食物单元格
+                const foodCells = [];
+                for (let i = 0; i < 5; i++) {
+                    const foodCell = document.createElement('td');
+                    const quantityCell = document.createElement('td');
+
+                    if (i < meal.foods.length) {
+                        foodCell.textContent = meal.foods[i].name;
+                        quantityCell.textContent = meal.foods[i].quantity;
+                    } else {
+                        // 对于不存在的食物，留空
+                        foodCell.textContent = '';
+                        quantityCell.textContent = '';
+                    }
+
+                    foodCells.push(foodCell);
+                    foodCells.push(quantityCell);
+                }
+
+                // 创建价格和营养单元格
+                const totalCell = document.createElement('td');
+                totalCell.textContent = meal.totalPrice.toFixed(2);
+
+                const energyCell = document.createElement('td');
+                energyCell.textContent = meal.energy;
+
+                const carbsCell = document.createElement('td');
+                carbsCell.textContent = meal.carbs.toFixed(1);
+
+                const proteinCell = document.createElement('td');
+                proteinCell.textContent = meal.protein.toFixed(1);
+
+                const fatCell = document.createElement('td');
+                fatCell.textContent = meal.fat.toFixed(1);
+
+                // 组装行
+                row.appendChild(mealNameCell);
+                foodCells.forEach(cell => row.appendChild(cell));
+                row.appendChild(totalCell);
+                row.appendChild(energyCell);
+                row.appendChild(carbsCell);
+                row.appendChild(proteinCell);
+                row.appendChild(fatCell);
+
+                tbody.appendChild(row);
+            });
+        }
+
+        // 填充餐次选择下拉框
+        function populateMealSelect() {
+            const select = document.getElementById('mealSelect');
+            select.innerHTML = '<option value="">-- 请选择餐次 --</option>';
+
+            meals.forEach(meal => {
+                const option = document.createElement('option');
+                option.value = meal.name;
+                option.textContent = meal.name;
+                select.appendChild(option);
+            });
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            const mealSelect = document.getElementById('mealSelect');
+            mealSelect.addEventListener('change', function () {
+                const selectedMealName = this.value;
+                if (!selectedMealName) {
+                    document.getElementById('totalPrice').textContent = '0.00 元';
+                    document.getElementById('mealDetails').textContent = '请从上方选择餐次查看详情';
+                    document.getElementById('nutritionSummary').innerHTML = '';
+                    return;
+                }
+
+                const meal = meals.find(m => m.name === selectedMealName);
+                if (meal) {
+                    // 更新价格
+                    document.getElementById('totalPrice').textContent = meal.totalPrice.toFixed(2) + ' 元';
+
+                    // 创建餐次详情HTML
+                    let detailsHTML = '<div>包含食物：</div>';
+                    meal.foods.forEach(food => {
+                        detailsHTML += `<div class="meal-item">${food.name} × ${food.quantity}</div>`;
+                    });
+                    document.getElementById('mealDetails').innerHTML = detailsHTML;
+
+                    // 创建营养信息HTML
+                    const nutritionHTML = `
+                        <div class="nutrition-card energy-card">
+                            <div class="nutrition-value">${(meal.energy / 4.184).toFixed(1)}</div>
+                            <div class="nutrition-title">能量(kcal)</div>
+                        </div>
+                        <div class="nutrition-card carbs-card">
+                            <div class="nutrition-value">${meal.carbs.toFixed(1)}</div>
+                            <div class="nutrition-title">碳水(g)</div>
+                        </div>
+                        <div class="nutrition-card protein-card">
+                            <div class="nutrition-value">${meal.protein.toFixed(1)}</div>
+                            <div class="nutrition-title">蛋白质(g)</div>
+                        </div>
+                        <div class="nutrition-card fat-card">
+                            <div class="nutrition-value">${meal.fat.toFixed(1)}</div>
+                            <div class="nutrition-title">脂肪(g)</div>
+                        </div>
+                    `;
+                    document.getElementById('nutritionSummary').innerHTML = nutritionHTML;
+                }
+            });
+        }
+
+        // 页面加载完成后初始化
+        window.addEventListener('DOMContentLoaded', initialize);
+    </script>
+</body>
+
+</html>

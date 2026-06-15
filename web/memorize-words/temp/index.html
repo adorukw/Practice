@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单词学习应用</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 单词本管理 -->
+        <div class="section">
+            <h2>单词本管理</h2>
+            <div>
+                <input type="text" id="new-book-name" placeholder="新单词本名称">
+                <button id="create-book">创建单词本</button>
+            </div>
+            <div>
+                <select id="book-list"></select>
+                <button id="delete-book">删除单词本</button>
+            </div>
+        </div>
+
+        <!-- 添加单词 -->
+        <div class="section">
+            <h2>添加单词</h2>
+            <div>
+                <input type="text" id="new-word" placeholder="英文单词">
+                <input type="text" id="new-translation" placeholder="中文翻译">
+                <button id="add-single">添加单词</button>
+            </div>
+            <div>
+                <input type="file" id="csv-file" accept=".csv">
+                <button id="import-csv">导入CSV</button>
+            </div>
+        </div>
+
+        <!-- 练习区域 -->
+        <div class="section">
+            <h2>学习模式</h2>
+            <div class="mode-selector">
+                <button data-mode="spell">拼写练习</button>
+                <button data-mode="choice">四选一</button>
+                <button data-mode="recall">快速回忆</button>
+                <button data-mode="listen">听写练习</button>
+            </div>
+            
+            <div id="practice-area">
+                <!-- 动态内容将在这里显示 -->
+            </div>
+            
+            <div class="controls">
+                <button id="next-word">下一个</button>
+                <button id="mark-familiar">标记为"熟"</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开发者网络工具包</title>
+    <style>
+        :root {
+            --primary: #4e73df;
+            --secondary: #858796;
+            --success: #1cc88a;
+            --warning: #f6c23e;
+            --light: #f8f9fc;
+            --dark: #5a5c69;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light);
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: var(--primary);
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .tool-card {
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            overflow: hidden;
+        }
+        
+        .tool-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+        }
+        
+        .tool-content {
+            padding: 20px;
+        }
+        
+        .tab-controls {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 15px;
+        }
+        
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        textarea, input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #2e59d9;
+        }
+        
+        .result-area {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+            min-height: 100px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        
+        .color-preview {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+        
+        .color-values {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>开发者网络工具包</h1>
+            <p>常用开发工具集合</p>
+        </header>
+        
+        <div class="tools-grid">
+            <!-- JSON 格式化工具 -->
+            <div class="tool-card">
+                <div class="tool-header">JSON 格式化</div>
+                <div class="tool-content">
+                    <textarea id="json-input" placeholder='粘贴 JSON 数据...'>{"name":"John","age":30,"city":"New York"}</textarea>
+                    <button id="format-json">格式化</button>
+                    <button id="minify-json">压缩</button>
+                    <div class="result-area" id="json-result"></div>
+                </div>
+            </div>
+            
+            <!-- Base64 编码/解码 -->
+            <div class="tool-card">
+                <div class="tool-header">Base64 转换</div>
+                <div class="tool-content">
+                    <div class="tab-controls">
+                        <div class="tab active" data-tab="encode">编码</div>
+                        <div class="tab" data-tab="decode">解码</div>
+                    </div>
+                    
+                    <div class="tab-content active" id="encode-content">
+                        <textarea id="base64-input" placeholder="输入要编码的文本...">Hello, Base64!</textarea>
+                        <button id="encode-base64">编码</button>
+                    </div>
+                    
+                    <div class="tab-content" id="decode-content">
+                        <textarea id="base64-encoded" placeholder="输入要解码的 Base64 字符串...">SGVsbG8sIEJhc2U2NCE=</textarea>
+                        <button id="decode-base64">解码</button>
+                    </div>
+                    
+                    <div class="result-area" id="base64-result"></div>
+                </div>
+            </div>
+            
+            <!-- 正则表达式测试器 -->
+            <div class="tool-card">
+                <div class="tool-header">正则表达式测试</div>
+                <div class="tool-content">
+                    <input type="text" id="regex-pattern" placeholder="输入正则表达式..." value="\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b">
+                    <textarea id="regex-text" placeholder="输入要测试的文本...">Contact us at info@example.com or support@company.org</textarea>
+                    <button id="test-regex">测试</button>
+                    <div class="result-area" id="regex-result"></div>
+                </div>
+            </div>
+            
+            <!-- 色彩空间转换 -->
+            <div class="tool-card">
+                <div class="tool-header">色彩空间转换</div>
+                <div class="tool-content">
+                    <div class="tab-controls">
+                        <div class="tab active" data-tab="hex">HEX</div>
+                        <div class="tab" data-tab="rgb">RGB</div>
+                        <div class="tab" data-tab="hsl">HSL</div>
+                    </div>
+                    
+                    <div class="tab-content active" id="hex-content">
+                        <input type="text" id="hex-input" placeholder="#RRGGBB" value="#4e73df">
+                        <button id="convert-hex">转换</button>
+                    </div>
+                    
+                    <div class="tab-content" id="rgb-content">
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <input type="number" id="rgb-r" placeholder="R" min="0" max="255" value="78">
+                            <input type="number" id="rgb-g" placeholder="G" min="0" max="255" value="115">
+                            <input type="number" id="rgb-b" placeholder="B" min="0" max="255" value="223">
+                        </div>
+                        <button id="convert-rgb">转换</button>
+                    </div>
+                    
+                    <div class="tab-content" id="hsl-content">
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <input type="number" id="hsl-h" placeholder="H" min="0" max="360" value="230">
+                            <input type="number" id="hsl-s" placeholder="S" min="0" max="100" value="70">
+                            <input type="number" id="hsl-l" placeholder="L" min="0" max="100" value="59">
+                        </div>
+                        <button id="convert-hsl">转换</button>
+                    </div>
+                    
+                    <div class="color-preview" id="color-preview"></div>
+                    <div class="color-values" id="color-values"></div>
+                </div>
+            </div>
+            
+            <!-- 加密/解密工具 -->
+            <div class="tool-card">
+                <div class="tool-header">加密/解密</div>
+                <div class="tool-content">
+                    <div class="tab-controls">
+                        <div class="tab active" data-tab="encrypt">加密</div>
+                        <div class="tab" data-tab="decrypt">解密</div>
+                    </div>
+                    
+                    <div class="tab-content active" id="encrypt-content">
+                        <textarea id="encrypt-text" placeholder="输入要加密的文本...">Secret Message</textarea>
+                        <input type="text" id="encrypt-key" placeholder="加密密钥 (可选)" value="mySecretKey">
+                        <button id="encrypt-btn">加密</button>
+                    </div>
+                    
+                    <div class="tab-content" id="decrypt-content">
+                        <textarea id="encrypted-text" placeholder="输入加密后的文本..."></textarea>
+                        <input type="text" id="decrypt-key" placeholder="解密密钥" value="mySecretKey">
+                        <button id="decrypt-btn">解密</button>
+                    </div>
+                    
+                    <div class="result-area" id="crypto-result"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 网络工具包核心功能
+        class WebTools {
+            constructor() {
+                this.init();
+            }
+            
+            init() {
+                this.setupEventListeners();
+                this.updateColorPreview('#4e73df');
+                this.updateColorValues('#4e73df');
+            }
+            
+            setupEventListeners() {
+                // JSON 工具
+                document.getElementById('format-json').addEventListener('click', () => {
+                    this.formatJSON();
+                });
+                
+                document.getElementById('minify-json').addEventListener('click', () => {
+                    this.minifyJSON();
+                });
+                
+                // Base64 工具
+                document.getElementById('encode-base64').addEventListener('click', () => {
+                    this.encodeBase64();
+                });
+                
+                document.getElementById('decode-base64').addEventListener('click', () => {
+                    this.decodeBase64();
+                });
+                
+                // 正则表达式测试
+                document.getElementById('test-regex').addEventListener('click', () => {
+                    this.testRegex();
+                });
+                
+                // 色彩转换
+                document.getElementById('convert-hex').addEventListener('click', () => {
+                    this.convertFromHex();
+                });
+                
+                document.getElementById('convert-rgb').addEventListener('click', () => {
+                    this.convertFromRGB();
+                });
+                
+                document.getElementById('convert-hsl').addEventListener('click', () => {
+                    this.convertFromHSL();
+                });
+                
+                // 加密解密
+                document.getElementById('encrypt-btn').addEventListener('click', () => {
+                    this.encryptText();
+                });
+                
+                document.getElementById('decrypt-btn').addEventListener('click', () => {
+                    this.decryptText();
+                });
+                
+                // 标签切换
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        const tabId = tab.dataset.tab;
+                        const container = tab.closest('.tool-card');
+                        
+                        // 移除所有active类
+                        container.querySelectorAll('.tab').forEach(t => {
+                            t.classList.remove('active');
+                        });
+                        
+                        container.querySelectorAll('.tab-content').forEach(c => {
+                            c.classList.remove('active');
+                        });
+                        
+                        // 添加active类
+                        tab.classList.add('active');
+                        container.querySelector(`#${tabId}-content`).classList.add('active');
+                    });
+                });
+            }
+            
+            formatJSON() {
+                try {
+                    const input = document.getElementById('json-input').value;
+                    const parsed = JSON.parse(input);
+                    const formatted = JSON.stringify(parsed, null, 2);
+                    document.getElementById('json-result').textContent = formatted;
+                } catch (e) {
+                    document.getElementById('json-result').textContent = '错误: 无效的 JSON 格式';
+                }
+            }
+            
+            minifyJSON() {
+                try {
+                    const input = document.getElementById('json-input').value;
+                    const parsed = JSON.parse(input);
+                    const minified = JSON.stringify(parsed);
+                    document.getElementById('json-result').textContent = minified;
+                } catch (e) {
+                    document.getElementById('json-result').textContent = '错误: 无效的 JSON 格式';
+                }
+            }
+            
+            encodeBase64() {
+                const input = document.getElementById('base64-input').value;
+                const encoded = btoa(encodeURIComponent(input));
+                document.getElementById('base64-result').textContent = encoded;
+            }
+            
+            decodeBase64() {
+                try {
+                    const input = document.getElementById('base64-encoded').value;
+                    const decoded = decodeURIComponent(atob(input));
+                    document.getElementById('base64-result').textContent = decoded;
+                } catch (e) {
+                    document.getElementById('base64-result').textContent = '错误: 无效的 Base64 字符串';
+                }
+            }
+            
+            testRegex() {
+                const pattern = document.getElementById('regex-pattern').value;
+                const text = document.getElementById('regex-text').value;
+                const flags = 'gmi';
+                
+                try {
+                    const regex = new RegExp(pattern, flags);
+                    const matches = text.match(regex);
+                    
+                    if (matches) {
+                        let result = `找到 ${matches.length} 个匹配项:\n\n`;
+                        matches.forEach((match, index) => {
+                            result += `${index + 1}: ${match}\n`;
+                        });
+                        document.getElementById('regex-result').textContent = result;
+                    } else {
+                        document.getElementById('regex-result').textContent = '未找到匹配项';
+                    }
+                } catch (e) {
+                    document.getElementById('regex-result').textContent = `错误: ${e.message}`;
+                }
+            }
+            
+            convertFromHex() {
+                const hex = document.getElementById('hex-input').value;
+                if (!/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(hex)) {
+                    this.showColorError('无效的 HEX 颜色值');
+                    return;
+                }
+                
+                this.updateColorPreview(hex);
+                this.updateColorValues(hex);
+            }
+            
+            convertFromRGB() {
+                const r = parseInt(document.getElementById('rgb-r').value);
+                const g = parseInt(document.getElementById('rgb-g').value);
+                const b = parseInt(document.getElementById('rgb-b').value);
+                
+                if (isNaN(r) || isNaN(g) || isNaN(b) || r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
+                    this.showColorError('无效的 RGB 值 (0-255)');
+                    return;
+                }
+                
+                const hex = this.rgbToHex(r, g, b);
+                this.updateColorPreview(hex);
+                this.updateColorValues(hex);
+            }
+            
+            convertFromHSL() {
+                const h = parseInt(document.getElementById('hsl-h').value);
+                const s = parseInt(document.getElementById('hsl-s').value);
+                const l = parseInt(document.getElementById('hsl-l').value);
+                
+                if (isNaN(h) || isNaN(s) || isNaN(l) || h < 0 || h > 360 || s < 0 || s > 100 || l < 0 || l > 100) {
+                    this.showColorError('无效的 HSL 值');
+                    return;
+                }
+                
+                const hex = this.hslToHex(h, s, l);
+                this.updateColorPreview(hex);
+                this.updateColorValues(hex);
+            }
+            
+            updateColorPreview(color) {
+                document.getElementById('color-preview').style.background = color;
+            }
+            
+            updateColorValues(hex) {
+                const rgb = this.hexToRgb(hex);
+                const hsl = this.rgbToHsl(rgb.r, rgb.g, rgb.b);
+                
+                document.getElementById('color-values').innerHTML = `
+                    <p><strong>HEX:</strong> ${hex}</p>
+                    <p><strong>RGB:</strong> rgb(${rgb.r}, ${rgb.g}, ${rgb.b})</p>
+                    <p><strong>HSL:</strong> hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)</p>
+                `;
+            }
+            
+            showColorError(message) {
+                document.getElementById('color-values').innerHTML = `<p style="color: red;">${message}</p>`;
+            }
+            
+            hexToRgb(hex) {
+                // 简化处理，实际应用中需要处理3位和6位HEX
+                const r = parseInt(hex.slice(1, 3), 16);
+                const g = parseInt(hex.slice(3, 5), 16);
+                const b = parseInt(hex.slice(5, 7), 16);
+                return { r, g, b };
+            }
+            
+            rgbToHex(r, g, b) {
+                return '#' + [r, g, b].map(x => {
+                    const hex = x.toString(16);
+                    return hex.length === 1 ? '0' + hex : hex;
+                }).join('');
+            }
+            
+            rgbToHsl(r, g, b) {
+                r /= 255;
+                g /= 255;
+                b /= 255;
+                
+                const max = Math.max(r, g, b);
+                const min = Math.min(r, g, b);
+                let h, s, l = (max + min) / 2;
+                
+                if (max === min) {
+                    h = s = 0; // achromatic
+                } else {
+                    const d = max - min;
+                    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                    
+                    switch (max) {
+                        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                        case g: h = (b - r) / d + 2; break;
+                        case b: h = (r - g) / d + 4; break;
+                    }
+                    
+                    h = Math.round(h * 60);
+                }
+                
+                return {
+                    h: Math.round(h),
+                    s: Math.round(s * 100),
+                    l: Math.round(l * 100)
+                };
+            }
+            
+            hslToHex(h, s, l) {
+                // 简化处理，实际应用中需要完整转换
+                return '#4e73df'; // 示例实现
+            }
+            
+            encryptText() {
+                const text = document.getElementById('encrypt-text').value;
+                const key = document.getElementById('encrypt-key').value || 'defaultKey';
+                
+                // 简单加密示例 (实际应用中应使用更安全的加密算法)
+                let encrypted = '';
+                for (let i = 0; i < text.length; i++) {
+                    const charCode = text.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+                    encrypted += String.fromCharCode(charCode);
+                }
+                
+                const result = btoa(encodeURIComponent(encrypted));
+                document.getElementById('crypto-result').textContent = result;
+                document.getElementById('encrypted-text').value = result;
+            }
+            
+            decryptText() {
+                const encrypted = document.getElementById('encrypted-text').value;
+                const key = document.getElementById('decrypt-key').value || 'defaultKey';
+                
+                try {
+                    const decoded = decodeURIComponent(atob(encrypted));
+                    
+                    let decrypted = '';
+                    for (let i = 0; i < decoded.length; i++) {
+                        const charCode = decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+                        decrypted += String.fromCharCode(charCode);
+                    }
+                    
+                    document.getElementById('crypto-result').textContent = decrypted;
+                } catch (e) {
+                    document.getElementById('crypto-result').textContent = '解密错误: 无效的输入或密钥';
+                }
+            }
+        }
+        
+        const webTools = new WebTools();
+    </script>
+</body>
+</html>
