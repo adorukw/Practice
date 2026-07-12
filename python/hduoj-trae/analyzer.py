@@ -4,7 +4,7 @@ from typing import Optional, Tuple
 import requests
 
 from langchain_community.llms import Ollama
-from langchain_community.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain_core.prompts import PromptTemplate
 
 import config
