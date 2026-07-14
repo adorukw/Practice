@@ -7,11 +7,13 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "-I/usr/include/SDL2 -D_REENTRANT",
+                "-I/usr/include/SDL2",
+                "-D_REENTRANT",
                 "${file}",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
-                "-lSDL2"
+                "-lSDL2",
+                "-lSDL2_image"
             ],
             "options": {
                 "cwd": "${fileDirname}"

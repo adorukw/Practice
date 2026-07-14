@@ -1,0 +1,3 @@
+/home/adorukw/AAAPAN/Project/Practice/CMake/系统教程/02/build/CMakeFiles/app.dir
+/home/adorukw/AAAPAN/Project/Practice/CMake/系统教程/02/build/CMakeFiles/edit_cache.dir
+/home/adorukw/AAAPAN/Project/Practice/CMake/系统教程/02/build/CMakeFiles/rebuild_cache.dir
