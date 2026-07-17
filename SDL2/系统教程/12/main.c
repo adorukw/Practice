@@ -1,6 +1,5 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <stdio.h>
 
 typedef struct {
     SDL_Texture *texture;
@@ -63,9 +62,10 @@ int main() {
 
     // 假设我们想播放第0行的行走动作（4帧）
     // 创建四个动画，分别对应四行
+    int frameWidth = 460, frameHeight = 600;
     Animation playerAnim0 = { .texture = sheet,
-                              .frameWidth = 460,
-                              .frameHeight = 600,
+                              .frameWidth = frameWidth,
+                              .frameHeight = frameHeight,
                               .rowIndex = 0,
                               .framesPerRow = 4,
                               .currentFrame = 0,
@@ -73,35 +73,35 @@ int main() {
                               .accumulator = 0,
                               .loop = SDL_TRUE };
 
-    Animation playerAnim1 = { .texture = sheet,
-                              .frameWidth = 460,
-                              .frameHeight = 600,
-                              .rowIndex = 1,
-                              .framesPerRow = 4,
-                              .currentFrame = 0,
-                              .frameTime = 0.3, // 可以不同速度
-                              .accumulator = 0,
-                              .loop = SDL_TRUE };
+    // Animation playerAnim1 = { .texture = sheet,
+    //                           .frameWidth = frameWidth,
+    //                           .frameHeight = frameHeight,
+    //                           .rowIndex = 1,
+    //                           .framesPerRow = 4,
+    //                           .currentFrame = 0,
+    //                           .frameTime = 0.3, // 可以不同速度
+    //                           .accumulator = 0,
+    //                           .loop = SDL_TRUE };
 
-    Animation playerAnim2 = { .texture = sheet,
-                              .frameWidth = 460,
-                              .frameHeight = 600,
-                              .rowIndex = 2,
-                              .framesPerRow = 4,
-                              .currentFrame = 0,
-                              .frameTime = 0.4,
-                              .accumulator = 0,
-                              .loop = SDL_TRUE };
+    // Animation playerAnim2 = { .texture = sheet,
+    //                           .frameWidth = frameWidth,
+    //                           .frameHeight = frameHeight,
+    //                           .rowIndex = 2,
+    //                           .framesPerRow = 4,
+    //                           .currentFrame = 0,
+    //                           .frameTime = 0.4,
+    //                           .accumulator = 0,
+    //                           .loop = SDL_TRUE };
 
-    Animation playerAnim3 = { .texture = sheet,
-                              .frameWidth = 460,
-                              .frameHeight = 600,
-                              .rowIndex = 3,
-                              .framesPerRow = 4,
-                              .currentFrame = 0,
-                              .frameTime = 0.2,
-                              .accumulator = 0,
-                              .loop = SDL_TRUE };
+    // Animation playerAnim3 = { .texture = sheet,
+    //                           .frameWidth = frameWidth,
+    //                           .frameHeight = frameHeight,
+    //                           .rowIndex = 3,
+    //                           .framesPerRow = 4,
+    //                           .currentFrame = 0,
+    //                           .frameTime = 0.2,
+    //                           .accumulator = 0,
+    //                           .loop = SDL_TRUE };
 
     SDL_bool running = SDL_TRUE;
     Uint32 lastTime = SDL_GetTicks();
@@ -124,9 +124,9 @@ int main() {
 
         // 更新所有动画
         AnimationUpdate(&playerAnim0, delta);
-        AnimationUpdate(&playerAnim1, delta);
-        AnimationUpdate(&playerAnim2, delta);
-        AnimationUpdate(&playerAnim3, delta);
+        // AnimationUpdate(&playerAnim1, delta);
+        // AnimationUpdate(&playerAnim2, delta);
+        // AnimationUpdate(&playerAnim3, delta);
 
         SDL_SetRenderDrawColor(renderer, 40, 40, 50, 255);
         SDL_RenderClear(renderer);
@@ -141,9 +141,8 @@ int main() {
         int baseY = 450;
 
         // 绘制四个动画
-        Animation *anims[] = { &playerAnim0, &playerAnim1, &playerAnim2,
-                               &playerAnim3 };
-        for (int i = 0; i < 4; i++) {
+        Animation *anims[] = { &playerAnim0 };
+        for (int i = 0; i < 1; i++) {
             AnimationDrawScaled(
                 anims[i], renderer, startX + i * (scaledW + spacing), baseY,
                 scaledW, scaledH);
