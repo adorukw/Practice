@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "player": {
+    "x": 400.00,
+    "y": 300.00,
+    "hp": 85,
+    "max_hp": 100,
+    "level": 7,
+    "exp": 3400
+  },
+  "inventory": [
+    {"name": "Potion", "quantity": 5},
+    {"name": "Sword", "quantity": 1},
+    {"name": "Key", "quantity": 3}
+  ],
+  "current_level": 3,
+  "play_time": 7200
+}
