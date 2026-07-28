@@ -1,0 +1,75 @@
+{
+    "activeFile": "study1.tmx",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "全部文件 (*)",
+    "fileStates": {
+        "/home/adorukw/AAAPAN/Project/Practice/Tiled/tiled_examples/desert.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 479.25,
+                "y": 642.5
+            }
+        },
+        "/home/adorukw/AAAPAN/Project/Practice/Tiled/tiled_examples/desert.tsx": {
+            "scaleInDock": 2
+        },
+        "Gemini_Generated_Image_sk7ntwsk7ntwsk7n.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 3
+        },
+        "Overworld.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 3,
+            "scaleInEditor": 4
+        },
+        "object.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 0.33,
+            "scaleInEditor": 0.5
+        },
+        "study1.tmx": {
+            "scale": 2,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 258.25,
+                "y": 135.5
+            }
+        },
+        "tmw_desert_spacing.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 2,
+            "scaleInEditor": 3
+        },
+        "塔防（透明）.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 0.5,
+            "scaleInEditor": 1
+        }
+    },
+    "last.imagePath": "/home/adorukw/AAAPAN/Project/Practice/Tiled/tiled_examples/sticker-knight/map",
+    "map.lastUsedFormat": "tmx",
+    "openFiles": [
+        "tmw_desert_spacing.tsx",
+        "study1.tmx",
+        "object.tsx"
+    ],
+    "project": "Study.tiled-project",
+    "property.type": "bool",
+    "recentFiles": [
+        "tmw_desert_spacing.tsx",
+        "object.tsx",
+        "study1.tmx",
+        "Overworld.tsx",
+        "Gemini_Generated_Image_sk7ntwsk7ntwsk7n.tsx",
+        "塔防（透明）.tsx",
+        "/home/adorukw/AAAPAN/Project/Practice/Tiled/tiled_examples/desert.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    },
+    "tileset.type": 1
+}
